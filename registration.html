@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registration</title>
+
+    <!-- firebase start ****************************************-->
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <!-- firebase end ******************************************-->
+
+    <!-- Your JS files & main module ***************************-->
+    <script type="module" src="./fb.mjs"></script>
+    <script src="registration.mjs"></script>
+
+
+</head>
+
+
+<body>
+  <h1>Ryan's Registration</h1>
+   <form id="userInfoForm">
+        <label for="name">Username:</label>
+        <input type="text" id="name" name="name" required />
+        <label for="name">Age:</label>
+        <input type="text" id="age" age="age" required />
+        <label for="name">Favourite Colour:</label>
+        <input type="text" id="colour" colour="colour" required />
+    </form>
+    <button onclick="fb_initialise(); fb_authenticate(); fb_WriteRec(); fb_WriteRecPrivate() ">Submit</button>
+
+
+</body>
+
+</html>
