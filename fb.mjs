@@ -17,7 +17,7 @@ import { get }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec }
+export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -60,6 +60,24 @@ function fb_authenticate() {
             console.log(error);
 
         });
+}
+
+function fb_detectLoginChange() {
+    console.log('%c fb_detectLoginChange(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const AUTH = getAuth();
+
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            currentUser = user;
+            userId = user.uid;
+            console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
+        } else {
+            console.log("⚠️ Not logged in — redirecting to registration.html");
+            location.href = "registration.html";
+        }
+    }, (error) => {
+        console.error("❌ Auth detection error:", error);
+    });
 }
 
 
@@ -197,3 +215,103 @@ function fb_ReadRec() {
 
     });
 }
+//Need to do it without AI
+/*function fb_writeScoreCoin(userScoreCoin) {
+    console.log("Look I'm Writing!")
+    console.log(userScoreCoin);
+    console.log('%c fb_writeScoreCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const highScoreRef = ref(DB, "Public/" + userId + "/userHighScoreCoin");
+    const userRef = ref(DB, "Public/" + userId);
+    console.log("Score written")
+    get(highScoreRef).then(snap => { //Code in fb_WriteScore was made with help from Chatgpt.
+        const prevHigh = snap.exists() ? snap.val() : 0;
+        const highScore = userScoreCoin > prevHigh ? userScoreCoin : prevHigh;
+
+
+        update(userRef, {
+            userScoreCoin: userScoreCoin,
+            userHighScoreCoin: highScore
+        }).then(() => {
+            console.log("Highscore updated")
+        });
+    });
+
+}
+//Writing the score for the game: Library Labryinth to the database
+
+function fb_writeScoreLibrary(userScoreLibrary) {
+    console.log("Look I'm Writing!")
+    console.log(userScoreLibrary);
+    console.log('%c fb_writeScoreLibrary(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const highScoreRef = ref(DB, "Public/" + userId + "/userHighScoreLibrary");
+    const userRef = ref(DB, "Public/" + userId);
+    console.log("Score written")
+    get(highScoreRef).then(snap => { //Code in fb_WriteScore was made with help from Chatgpt.
+        const prevHigh = snap.exists() ? snap.val() : 0;
+        const highScore = userScoreLibrary > prevHigh ? userScoreLibrary : prevHigh;
+
+
+        update(userRef, {
+            userScoreLibrary: userScoreLibrary,
+            userHighScoreLibrary: highScore
+        }).then(() => {
+            console.log("Highscore updated")
+        });
+    });
+
+}
+
+//some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
+/*function fb_ReadSortedLibrary() {
+  console.log('%c fb_ReadSortedLibrary(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+  const DB = getDatabase();
+  const sortKey = "userHighScoreLibrary";
+  const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey)); 
+  const table = document.getElementById("highScoreTableLibrary");
+  table.innerHTML = ""; //added by chatgpt
+
+  get(dbReference).then((snapshot) => {
+    var rank = 1;
+    const users = []; 
+    snapshot.forEach((userSnap) => { 
+      users.push(userSnap.val());
+    });
+    users.reverse(); 
+    users.forEach((obj) => {
+      table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreLibrary + "</td></tr>";//updated by chatgpt
+      rank++;//added by chatgpt
+    });
+  }).catch((error) => {
+    console.log("Sorting failed", error);
+  });
+}
+
+
+
+//some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
+function fb_ReadSortedCoin() {
+  console.log('%c fb_ReadSortedCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+  const DB = getDatabase();
+  const sortKey = "userHighScoreCoin";
+  const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey));//chatgpt removed limit to first
+  const table = document.getElementById("highScoreTableCoin");
+  table.innerHTML = "";//added by chatgpt
+
+    get(dbReference).then((snapshot) => {
+    var rank = 1;
+    const users = []; 
+    snapshot.forEach((userSnap) => { //added by ChatGpt
+      users.push(userSnap.val());//added by ChatGpt
+    });
+    users.reverse(); 
+    users.forEach((obj) => {
+      table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
+      rank++;//chatgpt added this
+    });
+  }).catch((error) => {
+     //❌ Code for a sorted read error goes here
+    console.log("Sorting failed", error);
+  });
+}*/

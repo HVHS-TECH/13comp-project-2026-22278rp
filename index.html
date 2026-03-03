@@ -1,3 +1,8 @@
+<!--*************************************************************
+  Home page for my Site
+  - should stay logged in here after registration
+**************************************************************-->
+
 <!DOCTYPE html>
 <html>
 
@@ -12,19 +17,43 @@
     <script type="module" src="./fb.mjs"></script>
     <script src="index.mjs"></script>
 
+    <!--CSS files-->
+    <link rel="stylesheet" type="text/css" href="./style.css">
 
 </head>
 
 
 <body>
-  <h1>Ryan's Game website</h1>
-  <h3>Introduction</h3>
-  <p>Welcome to my game website!</p>
-  <button onclick="location.href='registration.html'">Sign up or login</button>
-  <button onclick="fb_DeleteRec()">delete data</button>
-  <button onclick="fb_DeleteRec()">Logout</button>
-  <button onclick="fb_DeleteRec()">Feedback</button>
-  <button onclick="location.href='admin/admin.html'">admin</button>
+  <div class="grid-container">
+    <div class="grid-item item1">
+      <nav>
+        <button onclick="location.href='registration.html'">Sign up or login</button>
+        <button onclick="fb_DeleteRec()">delete data</button>
+        <button onclick="fb_DeleteRec()">Logout</button>
+        <button onclick="fb_DeleteRec()">Feedback</button>
+        <button onclick="location.href='admin/admin.html'">admin</button>
+      </nav>
+    </div>
+    <div class="grid-item item2">
+      <header>
+        <h1>Ryan's Game website</h1>
+      </header>
+    </div>
+    <div class="grid-item item3">
+      <main>
+        <h3>Introduction</h3>
+        <p>Welcome to my game website!</p>
+      </main>
+    </div>
+    <div class="grid-item item4">
+      <footer>
+
+      </footer>
+    </div>
+  </div>
+  
+  
+ 
 
 
 </body>
