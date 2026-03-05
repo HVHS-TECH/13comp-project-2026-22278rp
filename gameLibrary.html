@@ -1,5 +1,51 @@
-<button onclick="location.href='index.html'">Home</button>
-<button onclick="fb_DeleteRec()">delete data</button>
-<button onclick="fb_DeleteRec()">Logout</button>
-<button onclick="fb_DeleteRec()">Feedback</button>
-<button onclick="location.href='admin/admin.html'">admin</button>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ryan Parks- Game Library</title>
+
+    <!-- firebase start ****************************************-->
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <!-- firebase end ******************************************-->
+
+    <!-- Your JS files & main module ***************************-->
+    <script type="module" src="./fb.mjs"></script>
+    <script type="module" src="gameLibrary.mjs"></script>
+
+    <!--CSS files-->
+    <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+
+<body onload="fb_initialise(); fb_detectLoginChange()">
+
+<div class="grid-container">
+    <div class="grid-item item1">
+      <nav>
+        <button onclick="location.href='index.html'">Home</button>
+        <button onclick="fb_DeleteRec()">delete data</button>
+        <button onclick="fb_DeleteRec()">Logout</button>
+        <button onclick="fb_DeleteRec()">Feedback</button>
+        <button onclick="location.href='admin/admin.html'">admin</button>
+      </nav>
+    </div>
+    <div class="grid-item item2">
+      <header>
+        <h1>Game Library</h1>
+      </header>
+    </div>
+    <div class="grid-item item3">
+      <main>
+        <h3>Play my games!!!!</h3>
+        <button onclick="location.href='index.html'">Home</button>
+      </main>
+    </div>
+    <div class="grid-item item4">
+      <footer>
+
+      </footer>
+    </div>
+</div>
+</body>
+
+</html>

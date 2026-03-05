@@ -10,19 +10,19 @@
 
     <!-- Your JS files & main module ***************************-->
     <script type="module" src="./fb.mjs"></script>
-    <script src="registration.mjs"></script>
+    <script type="module" src="registration.mjs"></script>
 
     <!--CSS files-->
     <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 
 
-<body>
+<body onload="fb_initialise(); fb_authenticate()">
 
 <div class="grid-container">
     <div class="grid-item item1">
       <nav>
-        <button onclick="fb_initialise(); fb_authenticate(); fb_WriteRec(); fb_WriteRecPrivate() ">Register</button>
+        <button onclick="location.href='index.html'">Home</button>
         <button onclick="fb_DeleteRec()">delete data</button>
         <button onclick="fb_DeleteRec()">Feedback</button>
       </nav>
@@ -39,9 +39,10 @@
             <input type="text" id="name" name="name" required />
             <label for="name">Age:</label>
             <input type="text" id="age" age="age" required />
-            <label for="name">Favourite Colour:</label>
-            <input type="text" id="colour" colour="colour" required />
+            <label for="name">Gender:</label>
+            <input type="text" id="gender" gender="gender" required />
         </form>
+        <button onclick="fb_WriteRec(); fb_WriteRecPrivate(); location.href='gameLibrary.html' ">Register</button>
       </main>
     </div>
     <div class="grid-item item4">

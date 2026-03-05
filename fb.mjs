@@ -5,6 +5,10 @@ All variables & functions begin with fb_
 *******************************************/
 
 //Variables
+const COL_C = 'white';	    // These two const are part of the coloured 	
+const COL_B = '#4a048b';	//  console.log for functions scheme
+var currentUser = null;
+var userId = null;
 
 //Imported functions and constants required
 import { initializeApp }
@@ -17,7 +21,7 @@ import { get }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange }
+export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -38,6 +42,7 @@ function fb_initialise() {
     console.info(firebaseGameDB);
     // Initialize Firebase only if it hasn’t already been initialized
 }
+
 function fb_authenticate() {
     console.log('%c fb_authenticate(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
@@ -99,6 +104,7 @@ function fb_WriteRec() {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
+        location.href = "gameLibrary.html";
 
 
     }).catch((error) => {
@@ -113,8 +119,8 @@ function fb_WriteRec() {
 function fb_WriteRecPrivate() {
     const AUTH = getAuth();
     var age = document.getElementById("age").value;
-    var animal = document.getElementById("animal").value;
-    if (!currentUser || age == "" || isNaN(age) || animal == "" || !isNaN(animal)) {
+    var gender = document.getElementById("gender").value;
+    if (!currentUser || age == "" || isNaN(age) || gender == "" || !isNaN(gender)) {
         alert("You must be logged in and enter a valid name and age.")
         return;
     }
@@ -124,7 +130,7 @@ function fb_WriteRecPrivate() {
 
     const dbReference = ref(DB, "Private/" + userId);
 
-    update(dbReference, { Age: age, Animal: animal }).then(() => {
+    update(dbReference, { Age: age, Gender: gender }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -144,7 +150,7 @@ function fb_WriteRecPrivate() {
             userId = user.uid;
             console.log("✅ Logged in as:", user.email, "Name:", user.displayName, user.photoURL);
             update(dbReference, { Email: user.email, profilepicture: user.photoURL, Name: user.displayName }).then(() => {
-                location.href = 'index.html'
+                location.href = 'gameLibrary.html'
                 //✅ Code for a successful write goes here
                 console.log("Google login completed")
 
@@ -155,7 +161,7 @@ function fb_WriteRecPrivate() {
             });
         } else {
             console.log("⚠️ Not logged in — redirecting to index.html");
-            location.href = "index.html";
+            location.href = "registration.html";
         }
     },
         (error) => {
@@ -215,8 +221,8 @@ function fb_ReadRec() {
 
     });
 }
-//Need to do it without AI
-/*function fb_writeScoreCoin(userScoreCoin) {
+
+function fb_writeScoreCoin(userScoreCoin) {
     console.log("Look I'm Writing!")
     console.log(userScoreCoin);
     console.log('%c fb_writeScoreCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -264,7 +270,7 @@ function fb_writeScoreLibrary(userScoreLibrary) {
 }
 
 //some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
-/*function fb_ReadSortedLibrary() {
+function fb_ReadSortedLibrary() {
   console.log('%c fb_ReadSortedLibrary(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
   const DB = getDatabase();
   const sortKey = "userHighScoreLibrary";
@@ -314,4 +320,4 @@ function fb_ReadSortedCoin() {
      //❌ Code for a sorted read error goes here
     console.log("Sorting failed", error);
   });
-}*/
+}
