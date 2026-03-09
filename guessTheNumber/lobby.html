@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Guess the Number - Lobby</title>
+
+    <!-- firebase start ****************************************-->
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <!-- firebase end ******************************************-->
+
+    <!-- Your JS files & main module ***************************-->
+    <script type="module" src="lobby.mjs"></script>
+
+    <!--CSS files-->
+    <link rel="stylesheet" type="text/css" href="GTNstyle.css">
+</head>
+
+
+<body onload="fb_initialise(); fb_detectLoginChange()">
+
+<div class="grid-container">
+    <div class="grid-item item1">
+      <nav>
+        <button onclick="location.href='index.html'">Home</button>
+        <button onclick="location.href='gameLibrary.html'">Game Library</button>
+        <button onclick="fb_DeleteRec()">delete data</button>
+        <button onclick="fb_DeleteRec()">Logout</button>
+        <button onclick="fb_DeleteRec()">Feedback</button>
+        <button onclick="location.href='admin/admin.html'">admin</button>
+      </nav>
+    </div>
+    <div class="grid-item item2">
+      <header>
+        <h1>Guess the Number Lobby</h1>
+      </header>
+    </div>
+    <div class="grid-item item3">
+      <main>
+        <h1>Leaderboard:</h1>
+      </main>
+    </div>
+    <div class="grid-item item4">
+      <footer>
+        <h2>Games:</h2>
+        <button onclick="location.href='index.html'">Create game</button>
+        <h3>Available games</h3>
+      </footer>
+    </div>
+</div>
+</body>
+
+</html>
+<!--******************************************************
+END OF CODE
+*******************************************************-->

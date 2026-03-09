@@ -1,0 +1,40 @@
+.grid-container {
+display: grid;
+background-color: #EDE7E3; 
+grid-template-areas:
+    'links header header header header header'
+    'links main main main main main'
+    'links footer footer footer footer footer';
+}
+
+.grid-item {
+  background-color: #EDE7E3; 
+  border-style:groove;
+}
+
+.item1 {
+  grid-area: links ;
+  background-color:#16697A; display:inline-block;
+  color:#ffffff; 
+  
+}
+
+.item2 {
+grid-area: header ;
+background-color:#FFA62B;
+color:#1B1F3B; 
+text-align:center;
+}
+
+.item3 {
+  grid-area: main ;
+  text-align:center;
+  color:#000000; 
+}
+.item4 {
+  grid-area:footer;
+  
+  text-align:center;
+  background-color:#82C0CC;
+  color:#000000; 
+}
