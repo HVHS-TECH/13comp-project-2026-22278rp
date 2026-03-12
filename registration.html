@@ -39,17 +39,20 @@
             <input type="text" id="name" name="name" required />
             <label for="name">Age:</label>
             <input type="text" id="age" age="age" required />
-            <label for="name">Gender:</label>
-            <input type="text" id="gender" gender="gender" required />
-            Subjects: <select name="subject" id="subject">
-            <option value="" selected="selected">Select subject</option>
-            </select>
-            <br><br>
+            <div>
+              <select id="gender" gender="gender" required>
+                <option value="f">Female</option>
+                <option value="m">Male</option>
+                <option value="nb">Non-Binary</option>
+                <option value="o">Other</option>
+                <option value="?">Prefer not to say</option>
+              </select>
+            </div>
         </form>
 
         <!--<form name="form1" id="form1" action="/action_page.php">-->
           
-        <button onclick="fb_WriteRec(); fb_WriteRecPrivate(); location.href='gameLibrary.html' ">Register</button>
+        <button onclick="fb_WriteRec()">Register</button>
       </main>
     </div>
     <div class="grid-item item4">
