@@ -21,7 +21,7 @@ import { get }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead }
+export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -123,8 +123,7 @@ function fb_WriteRecPrivate() {
         alert("You must be logged in and enter a valid name and age.")
         return;
     }
-    console.log('%c fb_WriteRecPrivate(): ',
-        'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    console.log('%c fb_WriteRecPrivate(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
 
     const dbReference = ref(DB, "Private/" + userId);
@@ -328,7 +327,7 @@ function fb_readListener () {
     const dbReference= ref(DB, '/Games/GTN/activeGames').on('value', fb_logDatabaseRead());*/
   console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    const dbReference= ref(DB, "/Games/GTN/activeGames").on('value', fb_logDatabaseRead);
+    const dbReference= ref(DB, "/Games/GTN/activeGames").on('value');
 
     get(dbReference).then((snapshot) => {
 
@@ -339,6 +338,7 @@ function fb_readListener () {
             //✅ Code for a successful read goes here
             console.log("successful read");
             console.log(fb_data);
+            fb_logDatabaseRead()
         } else {
 
             //✅ Code for no record found goes here
@@ -356,5 +356,34 @@ function fb_readListener () {
 }
 
 function fb_logDatabaseRead(snapshot) {
-    console.log(snapshot.val());
+    console.log(snapshot)
+    console.log(snapshot.val())
+}
+
+function fb_sendAvailableGame() {
+console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+const DB = getDatabase();
+
+ const dbReference = ref(DB, "Games/GTN/activeGames" + userId);
+
+    update(dbReference, { Age: age }).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("successful write")
+
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("Writing error")
+    });
+
+}
+
+function fb_removeFinishedGame() {
+
+}
+
+function js_nameActiveGame() {
+   userIdShown.innerHTML = userId + "'s game" 
 }
