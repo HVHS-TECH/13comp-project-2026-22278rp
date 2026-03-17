@@ -21,7 +21,7 @@ import { get }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame }
+export { fb_initialise, fb_authenticate, fb_logout, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -84,6 +84,25 @@ function fb_detectLoginChange() {
         console.error("❌ Auth detection error:", error);
     });
 }
+
+function fb_logout() {
+    console.log('%c fb_logout(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const AUTH = getAuth();
+
+    signOut(AUTH).then(() => {
+
+        //✅ Code for a successful logout goes here
+         location.href = "index.html";
+
+    })
+
+        .catch((error) => {
+
+            //❌ Code for a logout error goes here
+
+        });
+}
+
 
 
 function fb_WriteRec() {
@@ -321,15 +340,11 @@ function fb_ReadSortedCoin() {
 }
 
 function fb_readListener () {
-    /*const DB = getDatabase()
-    console.log("read listener");
-    dbReference().ref('/Games/GTN/activeGames')
-    const dbReference= ref(DB, '/Games/GTN/activeGames').on('value', fb_logDatabaseRead());*/
-  console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    const dbReference= ref(DB, "/Games/GTN/activeGames").on('value');
+    const dbReference= ref(DB, "/Games/GTN/activeGames/" + userId + "/Active").on('value', fb_logDatabaseRead() );
 
-    get(dbReference).then((snapshot) => {
+    /*get(dbReference).then((snapshot) => {
 
         var fb_data = snapshot.val();
 
@@ -352,7 +367,7 @@ function fb_readListener () {
         console.log("fail read");
         console.log(fb_data);
 
-    });
+    });*/
 }
 
 function fb_logDatabaseRead(snapshot) {
@@ -364,9 +379,9 @@ function fb_sendAvailableGame() {
 console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
 const DB = getDatabase();
 
- const dbReference = ref(DB, "Games/GTN/activeGames" + userId);
+ const dbReference = ref(DB, "Games/GTN/activeGames/" + userId);
 
-    update(dbReference, { Age: age }).then(() => {
+    update(dbReference, { Active: "true" }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -385,5 +400,8 @@ function fb_removeFinishedGame() {
 }
 
 function js_nameActiveGame() {
-   userIdShown.innerHTML = userId + "'s game" 
+const DB = getDatabase();
+if (DB, "Games/GTN/activeGame/" + userId + "Active/" ) {}
+
+   userIdShown.innerHTML = displayName + "'s game" 
 }
