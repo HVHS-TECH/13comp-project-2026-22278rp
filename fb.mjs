@@ -13,7 +13,7 @@ var userId = null;
 //Imported functions and constants required
 import { initializeApp }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, update, remove }
+import { getDatabase, ref, update, remove, onValue }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged}
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
@@ -320,11 +320,20 @@ function fb_ReadSortedCoin() {
   });
 }
 
-function fb_readListener () {
-    /*const DB = getDatabase()
-    console.log("read listener");
-    dbReference().ref('/Games/GTN/activeGames')
-    const dbReference= ref(DB, '/Games/GTN/activeGames').on('value', fb_logDatabaseRead());*/
+function fb_readListener() {
+    console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const dbReference = ref(DB, "/Games/GTN/activeGames");
+    onValue (dbReference, (snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+
+        } 
+        else {
+
+        }
+    });
+}
+/*function fb_readListener () {
   console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     const dbReference= ref(DB, "/Games/GTN/activeGames").on('value');
@@ -353,7 +362,7 @@ function fb_readListener () {
         console.log(fb_data);
 
     });
-}
+}*/
 
 function fb_logDatabaseRead(snapshot) {
     console.log(snapshot)
@@ -366,7 +375,7 @@ const DB = getDatabase();
 
  const dbReference = ref(DB, "Games/GTN/activeGames" + userId);
 
-    update(dbReference, { Age: age }).then(() => {
+    update(dbReference, { Active: "true" }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
