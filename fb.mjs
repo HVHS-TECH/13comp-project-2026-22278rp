@@ -413,7 +413,7 @@ const DB = getDatabase();
 
 }
 
-/*function fb_removeFinishedGame() {
+function fb_removeFinishedGame() {
 
 }
 
@@ -422,4 +422,4 @@ const DB = getDatabase();
 if (DB, "Games/GTN/activeGame/" + userId + "Active/" ) {}
 
    userIdShown.innerHTML = displayName + "'s game" 
-}*/
+}
