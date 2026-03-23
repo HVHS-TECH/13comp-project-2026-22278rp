@@ -322,19 +322,24 @@ function fb_ReadSortedCoin() {
 
 function fb_readListener() {
     console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
     const dbReference = ref(DB, "/Games/GTN/activeGames");
     onValue (dbReference, (snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
-
+            //✅ Code for a successful read goes here
+            console.log("successful read");
+            console.log(fb_data);
         } 
         else {
-
+            //✅ Code for no record found goes here
+            console.log("no record found");
+            console.log(fb_data);
         }
     });
 }
 /*function fb_readListener () {
-  console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+  console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'const);
     const DB = getDatabase()
     const dbReference= ref(DB, "/Games/GTN/activeGames").on('value');
 
