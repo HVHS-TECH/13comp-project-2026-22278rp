@@ -400,7 +400,6 @@ const DB = getDatabase();
  const dbReference = ref(DB, "Games/GTN/activeGames" + userId);
 
     update(dbReference, { Active: "true" }).then(() => {
-    update(dbReference, { Active: "true" }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -423,4 +422,4 @@ const DB = getDatabase();
 if (DB, "Games/GTN/activeGame/" + userId + "Active/" ) {}
 
    userIdShown.innerHTML = displayName + "'s game" 
-}?
+}*/
