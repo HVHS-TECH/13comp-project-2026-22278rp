@@ -21,7 +21,7 @@ import { get }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame }
+export { fb_initialise, fb_authenticate, fb_logout, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -84,6 +84,25 @@ function fb_detectLoginChange() {
         console.error("❌ Auth detection error:", error);
     });
 }
+
+function fb_logout() {
+    console.log('%c fb_logout(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const AUTH = getAuth();
+
+    signOut(AUTH).then(() => {
+
+        //✅ Code for a successful logout goes here
+         location.href = "index.html";
+
+    })
+
+        .catch((error) => {
+
+            //❌ Code for a logout error goes here
+
+        });
+}
+
 
 
 function fb_WriteRec() {
@@ -343,7 +362,7 @@ function fb_readListener() {
     const DB = getDatabase()
     const dbReference= ref(DB, "/Games/GTN/activeGames").on('value');
 
-    get(dbReference).then((snapshot) => {
+    /*get(dbReference).then((snapshot) => {
 
         var fb_data = snapshot.val();
 
@@ -381,6 +400,7 @@ const DB = getDatabase();
  const dbReference = ref(DB, "Games/GTN/activeGames" + userId);
 
     update(dbReference, { Active: "true" }).then(() => {
+    update(dbReference, { Active: "true" }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -394,10 +414,13 @@ const DB = getDatabase();
 
 }
 
-function fb_removeFinishedGame() {
+/*function fb_removeFinishedGame() {
 
 }
 
 function js_nameActiveGame() {
-   userIdShown.innerHTML = userId + "'s game" 
-}
+const DB = getDatabase();
+if (DB, "Games/GTN/activeGame/" + userId + "Active/" ) {}
+
+   userIdShown.innerHTML = displayName + "'s game" 
+}?

@@ -22,10 +22,15 @@
     <div class="grid-item item1">
       <nav>
         <button onclick="location.href='index.html'">Home</button>
+        <br>
         <button onclick="location.href='gameLibrary.html'">Game Library</button>
+        <br>
         <button onclick="fb_DeleteRec()">delete data</button>
-        <button onclick="fb_DeleteRec()">Logout</button>
+        <br>
+        <button onclick="fb_logout()">Logout</button>
+        <br>
         <button onclick="fb_DeleteRec()">Feedback</button>
+        <br>
         <button onclick="location.href='admin/admin.html'">admin</button>
       </nav>
     </div>
@@ -43,6 +48,7 @@
       <footer>
         <h2>Games:</h2>
         <button onclick="fb_sendAvailableGame()">Create game</button>
+        <button onclick="fb_readListener()">LISTEN PLEASE</button>
         <h3>Available games</h3>
         <button id="userIdShown" onclick="js_nameActiveGame()">Ryan's game</button>
       </footer>
