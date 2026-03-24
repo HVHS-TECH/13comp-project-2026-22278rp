@@ -17,11 +17,21 @@ import { getDatabase, ref, update, remove, onValue }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged}
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { get }
+import { get, writeBatch, doc }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { get, writeBatch, doc }
+    from "https://www.gstatic.com/firestore-next/test.firestore.js";
+    
+    
+    firestore-next/test.firestore.js
 
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_logout, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_ReadRec, fb_detectLoginChange, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_writeScoreLibrary, fb_writeScoreCoin, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame }
+export { 
+         fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, 
+         fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin,
+         fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary,  
+         fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame 
+       }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -238,7 +248,7 @@ function fb_ReadRec() {
 
     });
 }
-
+//2025
 function fb_writeScoreCoin(userScoreCoin) {
     console.log("Look I'm Writing!")
     console.log(userScoreCoin);
@@ -261,7 +271,7 @@ function fb_writeScoreCoin(userScoreCoin) {
     });
 
 }
-//Writing the score for the game: Library Labryinth to the database
+//2025 - Writing the score for the game: Library Labryinth to the database
 
 function fb_writeScoreLibrary(userScoreLibrary) {
     console.log("Look I'm Writing!")
@@ -286,7 +296,7 @@ function fb_writeScoreLibrary(userScoreLibrary) {
 
 }
 
-//some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
+// 2025 - some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
 function fb_ReadSortedLibrary() {
   console.log('%c fb_ReadSortedLibrary(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
   const DB = getDatabase();
@@ -313,7 +323,7 @@ function fb_ReadSortedLibrary() {
 
 
 
-//some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
+//2025 - some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
 function fb_ReadSortedCoin() {
   console.log('%c fb_ReadSortedCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
   const DB = getDatabase();
@@ -342,8 +352,10 @@ function fb_ReadSortedCoin() {
 function fb_readListener() {
     console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "/Games/GTN/activeGames");
+    const dbReference = ref(DB, "/Games/GTN/unjoinedGames");
     onValue (dbReference, (snapshot) => {
+                    console.log("record changed");
+
         var fb_data = snapshot.val();
         if (fb_data != null) {
             //✅ Code for a successful read goes here
@@ -357,36 +369,6 @@ function fb_readListener() {
         }
     });
 }
-/*function fb_readListener () {
-  console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'const);
-    const DB = getDatabase()
-    const dbReference= ref(DB, "/Games/GTN/activeGames").on('value');
-
-    /*get(dbReference).then((snapshot) => {
-
-        var fb_data = snapshot.val();
-
-        if (fb_data != null) {
-
-            //✅ Code for a successful read goes here
-            console.log("successful read");
-            console.log(fb_data);
-            fb_logDatabaseRead()
-        } else {
-
-            //✅ Code for no record found goes here
-            console.log("no record found");
-            console.log(fb_data);
-        }
-
-    }).catch((error) => {
-
-        //❌ Code for a read error goes here
-        console.log("fail read");
-        console.log(fb_data);
-
-    });
-}*/
 
 function fb_logDatabaseRead(snapshot) {
     console.log(snapshot)
@@ -397,7 +379,7 @@ function fb_sendAvailableGame() {
 console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
 const DB = getDatabase();
 
- const dbReference = ref(DB, "Games/GTN/activeGames" + userId);
+ const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
 
     update(dbReference, { Active: "true" }).then(() => {
 
@@ -413,13 +395,33 @@ const DB = getDatabase();
 
 }
 
+async function fb_joinedGame() {
+    console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+
+    //create a new write batch
+    const batch = writeBatch(DB)
+    console.log("created batch");
+
+    const removedFromUnjoined = doc(DB, "Games/GTN/unjoinedGames/" + userId);
+    batch.delete(removedFromUnjoined)
+
+    const addedToActive = doc(DB, "Games/GTN/activeGames/" + userId);
+    batch.update(addedToActive, {Players: "full"})
+
+    await batch.commit();
+    console.log("commited batch");
+    
+
+}
+
 function fb_removeFinishedGame() {
 
 }
 
 function js_nameActiveGame() {
 const DB = getDatabase();
-if (DB, "Games/GTN/activeGame/" + userId + "Active/" ) {}
+if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/" ) {}
 
    userIdShown.innerHTML = displayName + "'s game" 
 }
