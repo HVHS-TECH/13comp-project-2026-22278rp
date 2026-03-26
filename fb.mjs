@@ -17,21 +17,12 @@ import { getDatabase, ref, update, remove, onValue }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged}
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { get, writeBatch, doc }
+import { get}
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { get, writeBatch, doc }
-    from "https://www.gstatic.com/firestore-next/test.firestore.js";
-    
-    
-    firestore-next/test.firestore.js
-
+import { writeBatch, doc} 
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; 
 //Exported functions
-export { 
-         fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, 
-         fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin,
-         fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary,  
-         fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame 
-       }
+export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -424,4 +415,34 @@ const DB = getDatabase();
 if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/" ) {}
 
    userIdShown.innerHTML = displayName + "'s game" 
+}
+
+function fb_adminRead() {
+    console.log('%c fb_AdminRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase()
+    const dbReference= ref(DB, "Private/");
+
+    get(dbReference).then((snapshot) => {
+
+        var fb_data = snapshot.val();
+
+        if (fb_data != null) {
+
+            //✅ Code for a successful read goes here
+            console.log("successful read");
+            console.log(fb_data);
+        } else {
+
+            //✅ Code for no record found goes here
+            console.log("no record found");
+            console.log(fb_data);
+        }
+
+    }).catch((error) => {
+
+        //❌ Code for a read error goes here
+        console.log("fail read");
+        console.log(fb_data);
+
+    });
 }
