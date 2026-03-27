@@ -22,11 +22,11 @@
 
 </head>
 
-<body onload="fb_initialise();">
+<body onload="fb_initialise(); fb_detectLoginChangeStayPut()">
   <div class="grid-container">
     <div class="grid-item item1">
       <nav>
-        <button onclick="location.href='registration.html'">Sign up or login</button>
+        <button id="loggedIn" onclick="location.href='registration.html'">Sign up or login</button>
         <br>
         <button onclick="fb_DeleteRec()">delete data</button>
         <br>
@@ -43,7 +43,7 @@
     <div class="grid-item item3">
       <main>
         <h3>Introduction</h3>
-        <p>Welcome to my game website!</p>
+        <p id="namedIndex">Welcome to my game website!</p>
       </main>
     </div>
     <div class="grid-item item4">

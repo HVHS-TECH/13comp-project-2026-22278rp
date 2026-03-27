@@ -22,7 +22,7 @@ import { get}
 import { writeBatch, doc} 
 from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; 
 //Exported functions
-export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame }
+export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -80,6 +80,25 @@ function fb_detectLoginChange() {
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
             location.href = "registration.html";
+        }
+    }, (error) => {
+        console.error("❌ Auth detection error:", error);
+    });
+}
+
+function fb_detectLoginChangeStayPut() {
+    console.log('%c fb_detectLoginChange(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const AUTH = getAuth();
+
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            currentUser = user;
+            userId = user.uid;
+            console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
+            loggedIn.innerHTML = "Logged in";
+            namedIndex.innerHTML = "Welcome to my game website " + user.displayName + "!";
+        } else {
+            console.log("⚠️ Not logged in — redirecting to registration.html");
         }
     }, (error) => {
         console.error("❌ Auth detection error:", error);
