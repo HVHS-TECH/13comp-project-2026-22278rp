@@ -22,7 +22,7 @@ import { get}
 import { writeBatch, doc} 
 from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; 
 //Exported functions
-export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame }
+export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -96,9 +96,28 @@ function fb_detectLoginChangeStayPut() {
             userId = user.uid;
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
             loggedIn.innerHTML = "Logged in";
-            namedIndex.innerHTML = "Welcome to my game website " + user.displayName + "!";
+            location.href = "gameLibrary.html";
+            namedIndex.innerHTML = "Play my games " + user.displayName + "!!!!!";
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
+        }
+    }, (error) => {
+        console.error("❌ Auth detection error:", error);
+    });
+}
+function fb_detectLoginChangeGame() {
+    console.log('%c fb_detectLoginChangeGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const AUTH = getAuth();
+
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            currentUser = user;
+            userId = user.uid;
+            console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
+            namedIndex.innerHTML = "Play my games " + user.displayName + "!!!!!";
+        } else {
+            console.log("⚠️ Not logged in — redirecting to registration.html");
+            location.href = "registration.html";
         }
     }, (error) => {
         console.error("❌ Auth detection error:", error);
@@ -439,6 +458,7 @@ if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/" ) {}
 function fb_adminRead() {
     console.log('%c fb_AdminRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
+    const table = document.createElement("table")
     const dbReference= ref(DB, "Private/");
 
     get(dbReference).then((snapshot) => {

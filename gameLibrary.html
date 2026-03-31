@@ -9,7 +9,6 @@
     <!-- firebase end ******************************************-->
 
     <!-- Your JS files & main module ***************************-->
-    c
     <script type="module" src="gameLibrary.mjs"></script>
 
     <!--CSS files-->
@@ -17,13 +16,11 @@
 </head>
 
 
-<body onload="fb_initialise(); fb_detectLoginChange()">
+<body onload="fb_initialise(); fb_detectLoginChangeGame()">
 
 <div class="grid-container">
     <div class="grid-item item1">
       <nav>
-        <button id ="navButton" onclick="location.href='index.html'">Home</button>
-        <br>
         <button onclick="fb_DeleteRec()">delete data</button>
         <br>
         <button onclick="fb_logout()">Logout</button>
@@ -40,8 +37,7 @@
     </div>
     <div class="grid-item item3">
       <main>
-        <h3>Play my games!!!!</h3>
-        <button onclick="location.href='index.html'">Home</button>
+        <h3 id = "namedIndex" >Play my games!!!!</h3>
         <button onclick="location.href='libraryLabarinth/indexLibrary.html'">Library Labyrinth</button>
         <button onclick="location.href='coinCollector/indexCoin.html'">Coin Collector</button>
         <button onclick="location.href='guessTheNumber/lobby.html'">Guess the Number</button>
