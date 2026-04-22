@@ -22,7 +22,7 @@ import { get}
 import { writeBatch, doc} 
 from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; 
 //Exported functions
-export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame }
+export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -455,33 +455,21 @@ if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/" ) {}
    userIdShown.innerHTML = displayName + "'s game" 
 }
 
-function fb_adminRead() {
-    console.log('%c fb_AdminRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+function fb_readScores() {
+    console.log('%c fb_readScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    const table = document.createElement("table")
-    const dbReference= ref(DB, "Private/");
+    const dbReference= ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
+    once (dbReference, (snapshot) => {
+        console.log ("Scores read");
+    })
+}
 
-    get(dbReference).then((snapshot) => {
+function fb_displayScores(snapshot) {
+    let Scores =  snapshot.val()
+    console.log("Ryan got " + Scores["Ryan Parks"]+" points")
+}
 
-        var fb_data = snapshot.val();
-
-        if (fb_data != null) {
-
-            //✅ Code for a successful read goes here
-            console.log("successful read");
-            console.log(fb_data);
-        } else {
-
-            //✅ Code for no record found goes here
-            console.log("no record found");
-            console.log(fb_data);
-        }
-
-    }).catch((error) => {
-
-        //❌ Code for a read error goes here
-        console.log("fail read");
-        console.log(fb_data);
-
-    });
+function fb_error(error) {
+    console.log("There was an error reading the message :(");
+    console.error(error);
 }

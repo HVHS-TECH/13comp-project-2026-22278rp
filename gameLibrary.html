@@ -16,7 +16,7 @@
 </head>
 
 
-<body onload="fb_initialise(); fb_detectLoginChangeGame()">
+<body onload="fb_initialise(); fb_detectLoginChangeGame(); fb_readScores()">
 
 <div class="grid-container">
     <div class="grid-item item1">
@@ -26,6 +26,8 @@
         <button onclick="fb_logout()">Logout</button>
         <br>
         <button onclick="fb_DeleteRec()">Feedback</button>
+        <br>
+        <button onclick="fb_displayScores()">Display scores</button>
         <br>
         <button onclick="location.href='admin/admin.html'">admin</button>
       </nav>
