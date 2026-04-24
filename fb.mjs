@@ -142,8 +142,6 @@ function fb_logout() {
         });
 }
 
-
-
 function fb_WriteRec() {
     const AUTH = getAuth();
     var name = document.getElementById("name").value;
@@ -226,7 +224,6 @@ function fb_WriteRecPrivate() {
 }
 
 //Writing the score for the game: Coin Collector to the database
-
 
 function fb_DeleteRec() {
     console.log('%c fb_DeleteRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
