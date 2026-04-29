@@ -15,14 +15,14 @@ import { initializeApp }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, update, remove, onValue }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged}
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { get}
+import { get }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { writeBatch, doc} 
-from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; 
+import { writeBatch, doc }
+    from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 //Exported functions
-export {fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
+export { fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -131,7 +131,7 @@ function fb_logout() {
     signOut(AUTH).then(() => {
 
         //✅ Code for a successful logout goes here
-         location.href = "index.html";
+        location.href = "index.html";
 
     })
 
@@ -248,7 +248,7 @@ function fb_DeleteRec() {
 function fb_ReadRec() {
     console.log('%c fb_ReadRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    const dbReference= ref(DB, "Public/");
+    const dbReference = ref(DB, "Public/");
 
     get(dbReference).then((snapshot) => {
 
@@ -324,70 +324,70 @@ function fb_writeScoreLibrary(userScoreLibrary) {
 
 // 2025 - some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
 function fb_ReadSortedLibrary() {
-  console.log('%c fb_ReadSortedLibrary(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
-  const DB = getDatabase();
-  const sortKey = "userHighScoreLibrary";
-  const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey)); 
-  const table = document.getElementById("highScoreTableLibrary");
-  table.innerHTML = ""; //added by chatgpt
+    console.log('%c fb_ReadSortedLibrary(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const sortKey = "userHighScoreLibrary";
+    const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey));
+    const table = document.getElementById("highScoreTableLibrary");
+    table.innerHTML = ""; //added by chatgpt
 
-  get(dbReference).then((snapshot) => {
-    var rank = 1;
-    const users = []; 
-    snapshot.forEach((userSnap) => { 
-      users.push(userSnap.val());
+    get(dbReference).then((snapshot) => {
+        var rank = 1;
+        const users = [];
+        snapshot.forEach((userSnap) => {
+            users.push(userSnap.val());
+        });
+        users.reverse();
+        users.forEach((obj) => {
+            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreLibrary + "</td></tr>";//updated by chatgpt
+            rank++;//added by chatgpt
+        });
+    }).catch((error) => {
+        console.log("Sorting failed", error);
     });
-    users.reverse(); 
-    users.forEach((obj) => {
-      table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreLibrary + "</td></tr>";//updated by chatgpt
-      rank++;//added by chatgpt
-    });
-  }).catch((error) => {
-    console.log("Sorting failed", error);
-  });
 }
 
 
 
 //2025 - some parts of sorted read were improved by chatgpt, originally this could only display the 1st place on each leaderboard but chatgpt added it so it can account for all users
 function fb_ReadSortedCoin() {
-  console.log('%c fb_ReadSortedCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
-  const DB = getDatabase();
-  const sortKey = "userHighScoreCoin";
-  const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey));//chatgpt removed limit to first
-  const table = document.getElementById("highScoreTableCoin");
-  table.innerHTML = "";//added by chatgpt
+    console.log('%c fb_ReadSortedCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const sortKey = "userHighScoreCoin";
+    const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey));//chatgpt removed limit to first
+    const table = document.getElementById("highScoreTableCoin");
+    table.innerHTML = "";//added by chatgpt
 
     get(dbReference).then((snapshot) => {
-    var rank = 1;
-    const users = []; 
-    snapshot.forEach((userSnap) => { //added by ChatGpt
-      users.push(userSnap.val());//added by ChatGpt
+        var rank = 1;
+        const users = [];
+        snapshot.forEach((userSnap) => { //added by ChatGpt
+            users.push(userSnap.val());//added by ChatGpt
+        });
+        users.reverse();
+        users.forEach((obj) => {
+            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
+            rank++;//chatgpt added this
+        });
+    }).catch((error) => {
+        //❌ Code for a sorted read error goes here
+        console.log("Sorting failed", error);
     });
-    users.reverse(); 
-    users.forEach((obj) => {
-      table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
-      rank++;//chatgpt added this
-    });
-  }).catch((error) => {
-     //❌ Code for a sorted read error goes here
-    console.log("Sorting failed", error);
-  });
 }
 
 function fb_readListener() {
     console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     const dbReference = ref(DB, "/Games/GTN/unjoinedGames");
-    onValue (dbReference, (snapshot) => {
-                    console.log("record changed");
+    onValue(dbReference, (snapshot) => {
+        console.log("record changed");
 
         var fb_data = snapshot.val();
         if (fb_data != null) {
             //✅ Code for a successful read goes here
             console.log("successful read");
             console.log(fb_data);
-        } 
+        }
         else {
             //✅ Code for no record found goes here
             console.log("no record found");
@@ -402,12 +402,12 @@ function fb_logDatabaseRead(snapshot) {
 }
 
 function fb_sendAvailableGame() {
-console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
-const DB = getDatabase();
+    console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    console.log(name);
+    const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
 
- const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
-
-    update(dbReference, { Active: "true" }).then(() => {
+    update(dbReference, { Active: "true", displayName: name }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -433,11 +433,11 @@ async function fb_joinedGame() {
     batch.delete(removedFromUnjoined)
 
     const addedToActive = doc(DB, "Games/GTN/activeGames/" + userId);
-    batch.update(addedToActive, {Players: "full"})
+    batch.update(addedToActive, { Players: "full" })
 
     await batch.commit();
     console.log("commited batch");
-    
+
 
 }
 
@@ -445,25 +445,26 @@ function fb_removeFinishedGame() {
 
 }
 
-function js_nameActiveGame() {
-const DB = getDatabase();
-if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/" ) {}
+function js_nameActiveGame(user) {
+    const DB = getDatabase();
+    if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/") { user }
+    currentUser = user;
+    userIdShown.innerHTML = user.displayName + "'s game"
 
-   userIdShown.innerHTML = displayName + "'s game" 
 }
 
 function fb_readScores() {
     console.log('%c fb_readScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    const dbReference= ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
-    once (dbReference, (snapshot) => {
-        console.log ("Scores read");
+    const dbReference = ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
+    once(dbReference, (snapshot) => {
+        console.log("Scores read");
     })
 }
 
 function fb_displayScores(snapshot) {
-    let Scores =  snapshot.val()
-    console.log("Ryan got " + Scores["Ryan Parks"]+" points")
+    let Scores = snapshot.val()
+    console.log("Ryan got " + Scores["Ryan Parks"] + " points")
 }
 
 function fb_error(error) {
