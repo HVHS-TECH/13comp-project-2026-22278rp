@@ -97,7 +97,7 @@ function fb_detectLoginChangeStayPut() {
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
             loggedIn.innerHTML = "Logged in";
             location.href = "gameLibrary.html";
-            namedIndex.innerHTML = "Play my games " + user.displayName + "!!!!!";
+            namedIndex.innerHTML = "Play my games " + name + "!!!!!";
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
         }
@@ -113,8 +113,10 @@ function fb_detectLoginChangeGame() {
         if (user) {
             currentUser = user;
             userId = user.uid;
+            console.log(name)
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
-            namedIndex.innerHTML = "Play my games " + user.displayName + "!!!!!";
+            fb_getUsername();
+            namedIndex.innerHTML = "Play my games " +  + "!!!!!";
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
             location.href = "registration.html";
@@ -122,6 +124,13 @@ function fb_detectLoginChangeGame() {
     }, (error) => {
         console.error("❌ Auth detection error:", error);
     });
+}
+
+function fb_getUsername() {
+    const DB = getDatabase();
+    const dbReference = ref(DB, "Public/" + userId);
+    namedIndex.innerHTML = "Play my games " +  + "!!!!!";
+    
 }
 
 function fb_logout() {
@@ -156,7 +165,7 @@ function fb_WriteRec() {
 
     const dbReference = ref(DB, "Public/" + userId);
 
-    update(dbReference, { displayName: name }).then(() => {
+    update(dbReference, { userName: name }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -407,7 +416,7 @@ function fb_sendAvailableGame() {
     console.log(name);
     const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
 
-    update(dbReference, { Active: "true", displayName: name }).then(() => {
+    update(dbReference, { Active: "true", userName: name }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -447,9 +456,13 @@ function fb_removeFinishedGame() {
 
 function js_nameActiveGame(user) {
     const DB = getDatabase();
-    if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/") { user }
-    currentUser = user;
-    userIdShown.innerHTML = user.displayName + "'s game"
+    if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/") {
+        currentUser = user;
+        fb_getUsername();
+        userIdShown.innerHTML = user.displayName + "'s game"
+
+    }
+   
 
 }
 
