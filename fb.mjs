@@ -128,8 +128,16 @@ function fb_detectLoginChangeGame() {
 
 function fb_getUsername() {
     const DB = getDatabase();
-    const dbReference = ref(DB, "Public/" + userId);
-    namedIndex.innerHTML = "Play my games " +  + "!!!!!";
+    const dbReference = ref(DB, "Public/" + userId + "/userName");
+   
+    get (dbReference).then((data) => {
+        var fb_data = data.val();
+        console.log("WOWEEWWWEE")
+        console.log(fb_data);
+        var name;
+        namedIndex.innerHTML = "Play my games " + fb_data + "!!!!!";
+    });
+    
     
 }
 
@@ -456,12 +464,15 @@ function fb_removeFinishedGame() {
 
 function js_nameActiveGame(user) {
     const DB = getDatabase();
-    if (DB, "Games/GTN/unjoinedGame/" + userId + "Active/") {
+
+    const dbReference = (DB, "Games/GTN/unjoinedGame/" + userId + "/Active")
+    get (dbReference).then((data) => {
         currentUser = user;
         fb_getUsername();
         userIdShown.innerHTML = user.displayName + "'s game"
+    });
+        
 
-    }
    
 
 }
@@ -469,10 +480,10 @@ function js_nameActiveGame(user) {
 function fb_readScores() {
     console.log('%c fb_readScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    const dbReference = ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
-    once(dbReference, (snapshot) => {
-        console.log("Scores read");
-    })
+   // const dbReference = ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
+    //once(dbReference, (snapshot) => {
+    //    console.log("Scores read");
+    //})
 }
 
 function fb_displayScores(snapshot) {
