@@ -116,7 +116,6 @@ function fb_detectLoginChangeGame() {
             console.log(name)
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
             fb_getUsername();
-            namedIndex.innerHTML = "Play my games " +  + "!!!!!";
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
             location.href = "registration.html";
@@ -404,6 +403,7 @@ function fb_readListener() {
             //✅ Code for a successful read goes here
             console.log("successful read");
             console.log(fb_data);
+            //for (var i = 0; i < userCount)
         }
         else {
             //✅ Code for no record found goes here
@@ -421,13 +421,13 @@ function fb_logDatabaseRead(snapshot) {
 function fb_sendAvailableGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    console.log(name);
     const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
 
-    update(dbReference, { Active: "true", userName: name }).then(() => {
+    update(dbReference, { Active: "true"}).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
+        js_nameActiveGame();
 
 
     }).catch((error) => {
@@ -462,19 +462,17 @@ function fb_removeFinishedGame() {
 
 }
 
-function js_nameActiveGame(user) {
+function js_nameActiveGame() {
     const DB = getDatabase();
-
-    const dbReference = (DB, "Games/GTN/unjoinedGame/" + userId + "/Active")
+    const dbReference = ref(DB, "Public/" + userId + "/userName");
+   console.log(userId);
     get (dbReference).then((data) => {
-        currentUser = user;
-        fb_getUsername();
-        userIdShown.innerHTML = user.displayName + "'s game"
+        var fb_data = data.val();
+        console.log("WOWEEWWWEE")
+        console.log(fb_data);
+        var name;
+        userIdShown.innerHTML = fb_data + "'s game"
     });
-        
-
-   
-
 }
 
 function fb_readScores() {
