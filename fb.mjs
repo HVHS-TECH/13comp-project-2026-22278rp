@@ -162,7 +162,7 @@ function fb_WriteRec() {
     const AUTH = getAuth();
     var name = document.getElementById("name").value;
     if (!currentUser || name == "" || name == null || !isNaN(name)) {
-        alert("You must be logged in and enter a valid name.")
+        alert("You must be logged in and enter a valid name and age.")
         return;
     }
 
@@ -191,7 +191,8 @@ function fb_WriteRecPrivate() {
     const AUTH = getAuth();
     var age = document.getElementById("age").value;
     var gender = document.getElementById("gender").value;
-    if (!currentUser || age == "" || isNaN(age) || gender == "" || !isNaN(gender)) {
+    var birthday = document.getElementById("birthday").value;
+    if (!currentUser || age == "" || isNaN(age) || gender == "" || !isNaN(gender) || birthday == "" || !isNaN(birthday)) {
         alert("You must be logged in and enter a valid name and age.")
         return;
     }
@@ -200,7 +201,7 @@ function fb_WriteRecPrivate() {
 
     const dbReference = ref(DB, "Private/" + userId);
 
-    update(dbReference, { Age: age, Gender: gender }).then(() => {
+    update(dbReference, { Age: age, Gender: gender, Birthday: birthday }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -403,6 +404,13 @@ function fb_readListener() {
             //✅ Code for a successful read goes here
             console.log("successful read");
             console.log(fb_data);
+            let usersHosting = Object.keys(fb_data)
+            console.log(usersHosting);
+            for(var i = 0; i < usersHosting.length; i++) {
+                let key = usersHosting[i];
+                
+                console.log("user " + i + " is " + key)
+            }
             //for (var i = 0; i < userCount)
         }
         else {

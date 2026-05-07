@@ -40,7 +40,7 @@
             <label for="name">Username:</label>
             <input type="text" id="name" name="name" required />
             <label for="name">Age:</label>
-            <input type="text" id="age" age="age" required />
+            <input type="number" id="age" age="age" required min="0" max="120" />
             <div>
               <select id="gender" gender="gender" required>
                 <option value="f">Female</option>
@@ -49,6 +49,8 @@
                 <option value="o">Other</option>
                 <option value="?">Prefer not to say</option>
               </select>
+              <label for="birthday">Birthday:</label>
+              <input type="date" id="birthday" name="birthday">
             </div>
         </form>
 
