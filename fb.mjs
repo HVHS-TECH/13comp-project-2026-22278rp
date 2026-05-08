@@ -401,6 +401,7 @@ function fb_readListener() {
 
         var fb_data = snapshot.val();
         if (fb_data != null) {
+            var buttons = window.document.getElementById("buttons");
             //✅ Code for a successful read goes here
             console.log("successful read");
             console.log(fb_data);
@@ -408,8 +409,10 @@ function fb_readListener() {
             console.log(usersHosting);
             for(var i = 0; i < usersHosting.length; i++) {
                 let key = usersHosting[i];
-                
+                buttons.innerHTML += "<button onclick=fb_joinedGame('"+key+"')>"+key+"</button>"
                 console.log("user " + i + " is " + key)
+
+                //x.addEventListener
             }
             //for (var i = 0; i < userCount)
         }
@@ -419,6 +422,9 @@ function fb_readListener() {
             console.log(fb_data);
         }
     });
+
+    //const dbFullGame = ref(DB, "/Games/GTN/unjoinedGames/Active: True")
+     
 }
 
 function fb_logDatabaseRead(snapshot) {
@@ -431,7 +437,7 @@ function fb_sendAvailableGame() {
     const DB = getDatabase();
     const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
 
-    update(dbReference, { Active: "true"}).then(() => {
+    update(dbReference, { Filled: "false"}).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -446,7 +452,24 @@ function fb_sendAvailableGame() {
 
 }
 
-async function fb_joinedGame() {
+function fb_joinedGame() {
+    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
+
+    update(dbReference, { Filled: "True"}).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("GAME FILLED")
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("Writing error")
+    });
+
+}
+
+/*async function fb_joinedGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
 
@@ -464,9 +487,9 @@ async function fb_joinedGame() {
     console.log("commited batch");
 
 
-}
+}*/
 
-function fb_removeFinishedGame() {
+function fb_removeFullGames() {
 
 }
 
