@@ -22,7 +22,7 @@ import { get }
 import { writeBatch, doc }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 //Exported functions
-export { fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
+export { fb_initialise, fb_fillDatabase, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
 //Firebase Functions
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -128,16 +128,16 @@ function fb_detectLoginChangeGame() {
 function fb_getUsername() {
     const DB = getDatabase();
     const dbReference = ref(DB, "Public/" + userId + "/userName");
-   
-    get (dbReference).then((data) => {
+
+    get(dbReference).then((data) => {
         var fb_data = data.val();
         console.log("WOWEEWWWEE")
         console.log(fb_data);
         var name;
         namedIndex.innerHTML = "Play my games " + fb_data + "!!!!!";
     });
-    
-    
+
+
 }
 
 function fb_logout() {
@@ -395,7 +395,7 @@ function fb_ReadSortedCoin() {
 function fb_readListener() {
     console.log('%c fb_readListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "/Games/GTN/unjoinedGames");
+    const dbReference = ref(DB, "/Games/GTN/hostedGames");
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
 
@@ -407,9 +407,10 @@ function fb_readListener() {
             console.log(fb_data);
             let usersHosting = Object.keys(fb_data)
             console.log(usersHosting);
-            for(var i = 0; i < usersHosting.length; i++) {
+            for (var i = 0; i < usersHosting.length; i++) {
                 let key = usersHosting[i];
-                buttons.innerHTML += "<button onclick=fb_joinedGame('"+key+"')>"+key+"</button>"
+                buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "</button>"
+                console.log(dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/isFilled"));
                 console.log("user " + i + " is " + key)
 
                 //x.addEventListener
@@ -423,8 +424,8 @@ function fb_readListener() {
         }
     });
 
-    //const dbFullGame = ref(DB, "/Games/GTN/unjoinedGames/Active: True")
-     
+    //const dbFullGame = ref(DB, "/Games/GTN/hostedGames/Active: True")
+
 }
 
 function fb_logDatabaseRead(snapshot) {
@@ -435,9 +436,9 @@ function fb_logDatabaseRead(snapshot) {
 function fb_sendAvailableGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + userId);
 
-    update(dbReference, { Filled: "false"}).then(() => {
+    update(dbReference, { isFilled: false }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -455,9 +456,9 @@ function fb_sendAvailableGame() {
 function fb_joinedGame() {
     console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/unjoinedGames/" + userId);
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + userId);
 
-    update(dbReference, { Filled: "True"}).then(() => {
+    update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("GAME FILLED")
@@ -477,8 +478,8 @@ function fb_joinedGame() {
     const batch = writeBatch(DB)
     console.log("created batch");
 
-    const removedFromUnjoined = doc(DB, "Games/GTN/unjoinedGames/" + userId);
-    batch.delete(removedFromUnjoined)
+    const removedFromhosted = doc(DB, "Games/GTN/hostedGames/" + userId);
+    batch.delete(removedFromhosted)
 
     const addedToActive = doc(DB, "Games/GTN/activeGames/" + userId);
     batch.update(addedToActive, { Players: "full" })
@@ -496,8 +497,8 @@ function fb_removeFullGames() {
 function js_nameActiveGame() {
     const DB = getDatabase();
     const dbReference = ref(DB, "Public/" + userId + "/userName");
-   console.log(userId);
-    get (dbReference).then((data) => {
+    console.log(userId);
+    get(dbReference).then((data) => {
         var fb_data = data.val();
         console.log("WOWEEWWWEE")
         console.log(fb_data);
@@ -509,7 +510,7 @@ function js_nameActiveGame() {
 function fb_readScores() {
     console.log('%c fb_readScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-   // const dbReference = ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
+    // const dbReference = ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
     //once(dbReference, (snapshot) => {
     //    console.log("Scores read");
     //})
@@ -523,4 +524,69 @@ function fb_displayScores(snapshot) {
 function fb_error(error) {
     console.log("There was an error reading the message :(");
     console.error(error);
+}
+
+function fb_fillDatabase() {
+    const DB = getDatabase()
+    const dbReference = ref(DB, "/");
+    var testData = {
+        "Admin": {
+            "Admins": {
+                "5acI9ILVYbd2X0zBkO7yoqtpwd23": true
+            },
+            "Players": {
+                "9n6Q5P9G4JVaxs9OTSlUKG6Ze1L2": true
+            }
+        },
+        "Games": {
+            "GTN": {
+                "hostedGames": {
+                    "wr8J2Em3oFNiXegjEN6UW2vBcet1": {
+                        "isFilled": true
+                    },
+                    "x2IoO0mFUQOrsR19cQet3zWyy8G2": {
+                        "isFilled": true
+                    }
+                }
+            }
+        },
+        "Private": {
+            "wr8J2Em3oFNiXegjEN6UW2vBcet1": {
+                "Age": "17",
+                "Birthday": "2026-02-25",
+                "Email": "22278rp@hvhs.school.nz",
+                "Gender": "f",
+                "Name": "Ryan Parks",
+                "profilepicture": "https://lh3.googleusercontent.com/a/ACg8ocJtHHD420r0HVR1RLylgtg-rvcf-evOqDgHM97sqpgfWeePaSow=s96-c"
+            },
+            "x2IoO0mFUQOrsR19cQet3zWyy8G2": {
+                "Age": "23",
+                "Birthday": "2026-05-12",
+                "Email": "quickspider55@gmail.com",
+                "Gender": "m",
+                "Name": "Ryan Parks",
+                "profilepicture": "https://lh3.googleusercontent.com/a/ACg8ocLfSeKgZdaMRbxg9wWm_ZkbjPnhxbMhm7PuuDGBX2kG9d6pFHIZ=s96-c"
+            }
+        },
+        "Public": {
+            "wr8J2Em3oFNiXegjEN6UW2vBcet1": {
+                "userName": "Ryan Parks"
+            },
+            "x2IoO0mFUQOrsR19cQet3zWyy8G2": {
+                "userName": "53tt4"
+            }
+        }
+    }
+    update(dbReference, testData).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("Filled database")
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("Error filling the database")
+    });
+
+
 }
