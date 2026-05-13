@@ -24,6 +24,7 @@ import { writeBatch, doc }
 //Exported functions
 export { fb_initialise, fb_fillDatabase, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
 //Firebase Functions
+
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const firebaseConfig =
@@ -99,7 +100,7 @@ function fb_detectLoginChangeStayPut() {
             location.href = "gameLibrary.html";
             namedIndex.innerHTML = "Play my games " + name + "!!!!!";
         } else {
-            console.log("⚠️ Not logged in — redirecting to registration.html");
+            console.log("⚠️ Not logged in");
         }
     }, (error) => {
         console.error("❌ Auth detection error:", error);
@@ -136,8 +137,6 @@ function fb_getUsername() {
         var name;
         namedIndex.innerHTML = "Play my games " + fb_data + "!!!!!";
     });
-
-
 }
 
 function fb_logout() {
@@ -183,8 +182,6 @@ function fb_WriteRec() {
         //❌ Code for a write error goes here
         console.log("Writing error")
     });
-
-
 }
 
 function fb_WriteRecPrivate() {
@@ -409,13 +406,20 @@ function fb_readListener() {
             console.log(usersHosting);
             for (var i = 0; i < usersHosting.length; i++) {
                 let key = usersHosting[i];
-                buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "</button>"
-                console.log(dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/isFilled"));
-                console.log("user " + i + " is " + key)
+                console.log(key)
+                            console.log(key);
 
-                //x.addEventListener
+                console.log(fb_data[key]["isFilled"])
+                if (fb_data[key]["isFilled"] = false) {
+                    //button appear
+                    console.log("hgeeee")
+                }
+                else {
+                    //delete button
+                }
+                buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "</button>"
+                console.log("user " + i + " is " + key)
             }
-            //for (var i = 0; i < userCount)
         }
         else {
             //✅ Code for no record found goes here
@@ -423,9 +427,6 @@ function fb_readListener() {
             console.log(fb_data);
         }
     });
-
-    //const dbFullGame = ref(DB, "/Games/GTN/hostedGames/Active: True")
-
 }
 
 function fb_logDatabaseRead(snapshot) {
