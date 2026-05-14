@@ -22,7 +22,38 @@ import { get }
 import { writeBatch, doc }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 //Exported functions
-export { fb_initialise, fb_fillDatabase, fb_authenticate, fb_logout, fb_detectLoginChange, fb_detectLoginChangeStayPut, fb_detectLoginChangeGame, fb_WriteRec, fb_WriteRecPrivate, fb_DeleteRec, fb_writeScoreLibrary, fb_writeScoreCoin, fb_ReadRec, fb_ReadSortedCoin, fb_ReadSortedLibrary, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, js_nameActiveGame, fb_joinedGame, fb_readScores, fb_displayScores, fb_error }
+export {
+    //setting up the firebase
+     fb_initialise, 
+     fb_fillDatabase,
+     //Login functions
+     fb_authenticate, 
+     fb_logout,
+     fb_detectLoginChange, 
+     fb_detectLoginChangeStayPut, 
+     fb_detectLoginChangeGame, 
+     //Write Rec
+     fb_WriteRec, 
+     fb_WriteRecPrivate, 
+     fb_DeleteRec, 
+     fb_writeScoreLibrary, 
+     fb_writeScoreCoin, 
+     //Read Rec
+     fb_ReadRec, 
+     fb_ReadSortedCoin, 
+     fb_ReadSortedLibrary,
+     //Guess the Number 
+     fb_readListener, 
+     fb_logDatabaseRead, 
+     fb_sendAvailableGame, 
+     js_nameActiveGame, 
+     fb_joinedGame, 
+     fb_stopGame,
+     //Score systems
+     fb_readScores, 
+     fb_displayScores, 
+     fb_error 
+    }
 //Firebase Functions
 
 function fb_initialise() {
@@ -395,10 +426,10 @@ function fb_readListener() {
     const dbReference = ref(DB, "/Games/GTN/hostedGames");
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
-
         var fb_data = snapshot.val();
         if (fb_data != null) {
             var buttons = window.document.getElementById("buttons");
+            buttons.innerHTML = null
             //✅ Code for a successful read goes here
             console.log("successful read");
             console.log(fb_data);
@@ -410,14 +441,16 @@ function fb_readListener() {
                             console.log(key);
 
                 console.log(fb_data[key]["isFilled"])
-                if (fb_data[key]["isFilled"] = false) {
+                if (fb_data[key]["isFilled"] == false) {
                     //button appear
-                    console.log("hgeeee")
+                    console.log("game is not full")
+                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "</button>"
                 }
-                else {
+                else if (fb_data[key]["isFilled"] == true) {
                     //delete button
+                    console.log("Game full")
+
                 }
-                buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "</button>"
                 console.log("user " + i + " is " + key)
             }
         }
@@ -463,6 +496,7 @@ function fb_joinedGame() {
 
         //✅ Code for a successful write goes here
         console.log("GAME FILLED")
+        location.href = "loading.html";
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -471,27 +505,20 @@ function fb_joinedGame() {
 
 }
 
-/*async function fb_joinedGame() {
-    console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+function fb_stopGame() {
+    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + userId);
 
-    //create a new write batch
-    const batch = writeBatch(DB)
-    console.log("created batch");
+    remove(dbReference).then(() => {
 
-    const removedFromhosted = doc(DB, "Games/GTN/hostedGames/" + userId);
-    batch.delete(removedFromhosted)
+        //✅ Code for a successful write goes here
+        console.log("GAME REMOVED")
+    }).catch((error) => {
 
-    const addedToActive = doc(DB, "Games/GTN/activeGames/" + userId);
-    batch.update(addedToActive, { Players: "full" })
-
-    await batch.commit();
-    console.log("commited batch");
-
-
-}*/
-
-function fb_removeFullGames() {
+        //❌ Code for a write error goes here
+        console.log("Writing error removing the game")
+    });
 
 }
 
