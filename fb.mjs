@@ -444,7 +444,8 @@ function fb_readListener() {
                 if (fb_data[key]["isFilled"] == false) {
                     //button appear
                     console.log("game is not full")
-                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "</button>"
+                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "'s game</button>"
+                    console.log("")
                 }
                 else if (fb_data[key]["isFilled"] == true) {
                     //delete button
@@ -477,6 +478,7 @@ function fb_sendAvailableGame() {
         //✅ Code for a successful write goes here
         console.log("successful write")
         js_nameActiveGame();
+        location.href = "loading.html";
 
 
     }).catch((error) => {
@@ -487,16 +489,17 @@ function fb_sendAvailableGame() {
 
 }
 
-function fb_joinedGame() {
-    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+function fb_joinedGame(buttonUserId) {
+    
+    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';' );
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/hostedGames/" + userId);
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + buttonUserId);
 
     update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("GAME FILLED")
-        location.href = "loading.html";
+        //location.href = "loading.html";
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -531,7 +534,7 @@ function js_nameActiveGame() {
         console.log("WOWEEWWWEE")
         console.log(fb_data);
         var name;
-        userIdShown.innerHTML = fb_data + "'s game"
+        //userIdShown.innerHTML = fb_data + "'s game"
     });
 }
 
