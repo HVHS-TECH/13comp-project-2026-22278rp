@@ -49,6 +49,7 @@ export {
      js_nameActiveGame, 
      fb_joinedGame, 
      fb_stopGame,
+     fb_playerFoundListener,
      //Score systems
      fb_readScores, 
      fb_displayScores, 
