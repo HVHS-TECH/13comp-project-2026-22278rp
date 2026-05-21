@@ -32,6 +32,7 @@ export {
      fb_detectLoginChange, 
      fb_detectLoginChangeStayPut, 
      fb_detectLoginChangeGame, 
+     fb_detectLoginChangeOnLoading,
      //Write Rec
      fb_WriteRec, 
      fb_WriteRecPrivate, 
@@ -161,6 +162,27 @@ function fb_detectLoginChangeGame() {
         console.error("❌ Auth detection error:", error);
     });
 }
+function fb_detectLoginChangeOnLoading() {
+    console.log('%c fb_detectLoginChange(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const AUTH = getAuth();
+
+    onAuthStateChanged(AUTH, (user) => {
+        if (user) {
+            currentUser = user;
+            console.log(currentUser);
+            userId = user.uid;
+            console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
+            userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
+            fb_playerFoundListener();
+        } else {
+            console.log("⚠️ Not logged in — redirecting to registration.html");
+            location.href = "registration.html";
+        }
+    }, (error) => {
+        console.error("❌ Auth detection error:", error);
+    });
+}
+
 
 function fb_getUsername() {
     const DB = getDatabase();
@@ -554,14 +576,17 @@ function fb_displayScores(snapshot) {
     console.log("Ryan got " + Scores["Ryan Parks"] + " points")
 }
 
-function fb_playerFoundListener(buttonUserId) {
+function fb_playerFoundListener() {
     console.log('%c fb_playerFoundListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "/Games/GTN/hostedGames" + buttonUserId);
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId);
+    console.log("/Games/GTN/hostedGames" + userId);
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
-        if (dbReference, {isFilled: true}) {
+        console.log (fb_data);
+        /*if (dbReference, {fb_data,[buttonUserId]:["isFilled"] == true}) {
+        if (if the user who is hosting has their isfilled == true )
             //✅ Code for a successful read goes here
             console.log("GAME HAS LOADED");
             console.log(fb_data);
@@ -571,7 +596,7 @@ function fb_playerFoundListener(buttonUserId) {
             //✅ Code for no record found goes here
             console.log("no record found");
             console.log(fb_data);
-        }
+        }*/
     });
 }
 

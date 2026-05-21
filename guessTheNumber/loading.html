@@ -37,11 +37,12 @@
   BODY
 ****************************************************-->
 
-<body onload="fb_initialise(); fb_detectLoginChange(); fb_playerFoundListener()">
+<body onload="fb_initialise(); fb_detectLoginChangeOnLoading()">
 
   <div class="grid-container">
     <div class="grid-item item1">
       <nav>
+        <div id = "userPhoto"></div>
         <button onclick="fb_stopGame()">Cancel</button>
       </nav>
     </div>
