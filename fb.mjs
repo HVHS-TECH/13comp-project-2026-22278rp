@@ -47,7 +47,6 @@ export {
      fb_readListener, 
      fb_logDatabaseRead, 
      fb_sendAvailableGame, 
-     js_nameActiveGame, 
      fb_joinedGame, 
      fb_stopGame,
      fb_playerFoundListener,
@@ -501,7 +500,6 @@ function fb_sendAvailableGame() {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
-        js_nameActiveGame();
         location.href = "loading.html";
 
 
@@ -549,18 +547,6 @@ function fb_stopGame() {
 
 }
 
-function js_nameActiveGame() {
-    const DB = getDatabase();
-    const dbReference = ref(DB, "Public/" + userId + "/userName");
-    console.log(userId);
-    get(dbReference).then((data) => {
-        var fb_data = data.val();
-        console.log("WOWEEWWWEE")
-        console.log(fb_data);
-        var name;
-        //userIdShown.innerHTML = fb_data + "'s game"
-    });
-}
 
 function fb_readScores() {
     console.log('%c fb_readScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -585,18 +571,16 @@ function fb_playerFoundListener() {
         console.log("record changed");
         var fb_data = snapshot.val();
         console.log (fb_data);
-        /*if (dbReference, {fb_data,[buttonUserId]:["isFilled"] == true}) {
-        if (if the user who is hosting has their isfilled == true )
+        console.log(fb_data["isFilled"])
+        if(fb_data["isFilled"] == true) {
             //✅ Code for a successful read goes here
             console.log("GAME HAS LOADED");
-            console.log(fb_data);
             location.href = "GTN.html"
         }
         else {
             //✅ Code for no record found goes here
             console.log("no record found");
-            console.log(fb_data);
-        }*/
+        }
     });
 }
 

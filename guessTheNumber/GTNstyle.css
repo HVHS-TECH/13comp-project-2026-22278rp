@@ -38,3 +38,19 @@ text-align:center;
   background-color:#82C0CC;
   color:#000000; 
 }
+
+.navButtons {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  padding: 1.2rem 2.5rem;
+  background-color: #16697A;
+  color: white;
+  border: 8px #0a323a;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left:10px;
+}
+.navButtons:hover {
+  background-color:#0a323a; /* Green */
+  color: white;
+}
