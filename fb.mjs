@@ -456,8 +456,8 @@ function fb_readListener() {
         if (fb_data != null) {
             var buttons = window.document.getElementById("buttons");
             buttons.innerHTML = null
-            //✅ Code for a successful read goes here
-            console.log("successful read");
+            //✅ a change has been detected in the database and has been read
+            console.log("Change detected, read success");
             console.log(fb_data);
             let usersHosting = Object.keys(fb_data)
             console.log(usersHosting);
@@ -466,12 +466,12 @@ function fb_readListener() {
                 console.log(key);
                 console.log(fb_data[key]["isFilled"])
                 if (fb_data[key]["isFilled"] == false) {
-                    //button appear
+                    //the button appears on the lobby page
                     console.log("game is not full")
                     buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "'s game</button>"
                 }
                 else if (fb_data[key]["isFilled"] == true) {
-                    //delete button
+                    //A buttons does not appear as the game is already full
                     console.log("Game full")
 
                 }
@@ -573,15 +573,19 @@ function fb_playerFoundListener() {
         console.log (fb_data);
         console.log(fb_data["isFilled"])
         if(fb_data["isFilled"] == true) {
-            //✅ Code for a successful read goes here
+            //✅ Code if another player had joined the host's game
             console.log("GAME HAS LOADED");
             location.href = "GTN.html"
         }
         else {
-            //✅ Code for no record found goes here
+            //✅ No one has joined the host's game yet
             console.log("no record found");
         }
     });
+}
+
+function fb_matchedPlayers() {
+    console.log('%c fb_matchedPlayers(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
 }
 
 function fb_error(error) {
@@ -618,8 +622,9 @@ function fb_fillDatabase() {
                 "Age": "17",
                 "Birthday": "2026-02-25",
                 "Email": "22278rp@hvhs.school.nz",
-                "Gender": "f",
+                "Gender": "m",
                 "Name": "Ryan Parks",
+                "role": "Admin",
                 "profilepicture": "https://lh3.googleusercontent.com/a/ACg8ocJtHHD420r0HVR1RLylgtg-rvcf-evOqDgHM97sqpgfWeePaSow=s96-c"
             },
             "x2IoO0mFUQOrsR19cQet3zWyy8G2": {

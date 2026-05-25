@@ -1,15 +1,20 @@
 
-.Button {
+.navButtons {
   margin-top: 1.5rem;
   font-size: 0.9rem;
   padding: 1.2rem 2.5rem;
-  background-color: #1D3557;
+  background-color: #16697A;
   color: white;
-  border: none;
   border-radius: 6px;
+  border-style: solid;
   cursor: pointer;
   margin-left:10px;
 }
+.navButtons:hover {
+  background-color:#0a323a; /* Green */
+  color: white;
+}
+
 
 .grid-container {
 display: grid;
