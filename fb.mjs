@@ -50,6 +50,7 @@ export {
      fb_joinedGame, 
      fb_stopGame,
      fb_playerFoundListener,
+     fb_RandomNumberRec,
      //Score systems
      fb_readScores, 
      fb_displayScores, 
@@ -657,4 +658,51 @@ function fb_fillDatabase() {
     });
 
 
+}
+
+function startGame () {
+    var targetNumber =  Math.ceil(Math.random()*100)
+    console.log(targetNumber);
+    // If the user wins
+    if (player1Guess.innerHTML == targetNumber) 
+    {
+        console.log("You won");
+    }
+        
+    else if (player1Guess > targetNumber ) 
+    {
+        //If the user inputs a number over the target number
+        console.log("Lower")
+    }
+        
+    else if (player1Guess.innerHTML < targetNumber) 
+    {
+        //If the user gets the number incorrect and it needs to be higher
+        console.log("Higher")
+    }
+} 
+
+function turnBasedSystem () {
+
+}
+ 
+function fb_RandomNumberRec() {
+    const AUTH = getAuth();
+    var targetNumber =  Math.ceil(Math.random()*100)
+    console.log('%c fb_RandomNumberRec(): ',
+        'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase()
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId);
+
+    update(dbReference, { Answer: targetNumber }).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("Random number created")
+        console.log(targetNumber);
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("error for writing a random number")
+    });
 }

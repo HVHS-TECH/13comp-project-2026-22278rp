@@ -10,14 +10,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- stylesheets *******************************************-->
-  <link rel="stylesheet" href="styleLibrary.css">
+  <link rel="stylesheet" href="GTNstyle.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
 
   <!--Java script files-->
 
-  <script src="GTN.mjs"></script>
   <script type="module" src="./main.mjs"></script>
 
 </head>
@@ -43,12 +42,15 @@
       <main>
         <label for="name">Player 1:</label>
         <input type="number" id="player1Guess" player1Guess="player1Guess" required min="1" max="100" />
-        
+        <button onclick="fb_RandomNumberRec();">Submit</button>
         <h1>VS</h1>
         <label for="name">Player 2:</label>
         <input type="number" id="player2Guess" player2Guess="player2Guess" required min="1" max="100" />
+
         <h3>Player 1 guesses:</h3>
+
         <h3>Player 2 guesses:</h3>
+
       </main>
     </div>
     <div class="grid-item item4">
