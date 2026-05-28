@@ -469,7 +469,7 @@ function fb_readListener() {
                 if (fb_data[key]["isFilled"] == false) {
                     //the button appears on the lobby page
                     console.log("game is not full")
-                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "'s game</button>"
+                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "'); fb_RandomNumberRec('" + key + "')>" + key + "'s game</button>"
                 }
                 else if (fb_data[key]["isFilled"] == true) {
                     //A buttons does not appear as the game is already full
@@ -686,8 +686,29 @@ function turnBasedSystem () {
 
 }
  
-function fb_RandomNumberRec() {
+function fb_RandomNumberRec(buttonUserId) {
     const AUTH = getAuth();
+    var targetNumber =  Math.ceil(Math.random()*100)
+    console.log('%c fb_RandomNumberRec(): ',
+        'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase()
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + buttonUserId);
+
+    update(dbReference, { Answer: targetNumber }).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("Random number created")
+        console.log(targetNumber);
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("error for writing a random number")
+    });
+}
+
+function fb_WritePlayer1Guess() {
+   const AUTH = getAuth();
     var targetNumber =  Math.ceil(Math.random()*100)
     console.log('%c fb_RandomNumberRec(): ',
         'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -704,5 +725,72 @@ function fb_RandomNumberRec() {
 
         //❌ Code for a write error goes here
         console.log("error for writing a random number")
+    }); 
+}
+
+function fb_WritePlayer2Guess() {
+    
+}
+
+function fb_DetectGuessPlayer1 () {
+
+}
+
+function fb_DetectGuessPlayer2 () {
+    
+}
+
+function fb_BringPlayer1Data() {
+    const AUTH = getAuth();
+    var name = document.getElementById("name").value;
+    if (!currentUser || name == "" || name == null || !isNaN(name)) {
+        alert("You must be logged in and enter a valid name and age.")
+        return;
+    }
+
+    console.log('%c fb_WriteRec(): ',
+        'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase()
+
+    const dbReference = ref(DB, "Public/" + userId);
+
+    update(dbReference, { userName: name }).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("successful write")
+        fb_WriteRecPrivate();
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("Writing error")
     });
 }
+
+function fb_BringPlayer2Data() {
+    const AUTH = getAuth();
+    var name = document.getElementById("name").value;
+    if (!currentUser || name == "" || name == null || !isNaN(name)) {
+        alert("You must be logged in and enter a valid name and age.")
+        return;
+    }
+
+    console.log('%c fb_WriteRec(): ',
+        'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase()
+
+    const dbReference = ref(DB, "Public/" + userId);
+
+    update(dbReference, { userName: name }).then(() => {
+
+        //✅ Code for a successful write goes here
+        console.log("successful write")
+        fb_WriteRecPrivate();
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("Writing error")
+    });
+}
+
