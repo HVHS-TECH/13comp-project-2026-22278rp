@@ -706,3 +706,21 @@ function fb_RandomNumberRec() {
         console.log("error for writing a random number")
     });
 }
+
+
+function fb_WritePlayer1() {
+    
+}
+
+function fb_WritePlayer2() {
+
+}
+
+function fb_ListenForPlayer1() {
+    //The non-host player, player 2 listens for player 1 to guess a number
+    
+}
+
+function fb_ListenForPlayer2() {
+    //The host player, player 1 listens for player 2 to guess a number
+}
