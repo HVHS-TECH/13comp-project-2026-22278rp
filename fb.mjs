@@ -51,6 +51,12 @@ export {
      fb_stopGame,
      fb_playerFoundListener,
      fb_RandomNumberRec,
+     fb_WritePlayer1,
+     fb_WritePlayer2,
+     fb_ListenForPlayer1,
+     fb_ListenForPlayer2,
+     fb_IdentifyPlayers,
+     fb_Winner,
      //Score systems
      fb_readScores, 
      fb_displayScores, 
@@ -567,6 +573,8 @@ function fb_playerFoundListener() {
     console.log('%c fb_playerFoundListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId);
+    const usernameRef = ref(DB, "/Public/" + userId);
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 1")
     console.log("/Games/GTN/hostedGames" + userId);
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
@@ -577,6 +585,9 @@ function fb_playerFoundListener() {
             //✅ Code if another player had joined the host's game
             console.log("GAME HAS LOADED");
             location.href = "GTN.html"
+            update(player1Ref, {userName: name, UserId: userId}).then(() => {
+                
+            })
         }
         else {
             //✅ No one has joined the host's game yet
@@ -669,7 +680,7 @@ function startGame () {
         console.log("You won");
     }
         
-    else if (player1Guess > targetNumber ) 
+    else if (player1Guess > targetNumber )
     {
         //If the user inputs a number over the target number
         console.log("Lower")
@@ -699,6 +710,7 @@ function fb_RandomNumberRec() {
         //✅ Code for a successful write goes here
         console.log("Random number created")
         console.log(targetNumber);
+        
 
     }).catch((error) => {
 
@@ -708,18 +720,95 @@ function fb_RandomNumberRec() {
 }
 
 function fb_WritePlayer1() {
-    
+    const AUTH = getAuth();
+    console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    const DB = getDatabase()
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 1");
+
+    update(dbReference, { CurrentGuess: player1Guess.value}).then(() => {
+  
+        //✅ Code for a successful write goes here
+        console.log("Player 1 has guessed!")
+        console.log(player1Guess.value);
+        if (player1Guess.innerHTML == targetNumber) 
+        {
+            console.log("You won");
+            
+        }
+        
+        else if (player1Guess > targetNumber )
+        {
+            //If the user inputs a number over the target number
+            console.log("Lower")
+        }
+        
+        else if (player1Guess.innerHTML < targetNumber) 
+        {
+            //If the user gets the number incorrect and it needs to be higher
+            console.log("Higher")
+        }
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("error when player 1 is guessing")
+        console.log(error);
+    });
 }
 
 function fb_WritePlayer2() {
+    const AUTH = getAuth();
+    console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    const DB = getDatabase()
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 2");
 
+    update(dbReference, { CurrentGuess: player1Guess}).then(() => {
+  
+        //✅ Code for a successful write goes here
+        console.log("Player 1 has guessed!")
+        console.log(player1Guess);
+        if (player1Guess == targetNumber) 
+        {
+            console.log("You won");
+            
+        }
+        
+        else if (player1Guess > targetNumber )
+        {
+            //If the user inputs a number over the target number
+            console.log("Lower")
+        }
+        
+        else if (player1Guess < targetNumber) 
+        {
+            //If the user gets the number incorrect and it needs to be higher
+            console.log("Higher")
+        }
+
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log("error when player 1 is guessing")
+    });
 }
 
 function fb_ListenForPlayer1() {
     //The non-host player, player 2 listens for player 1 to guess a number
-    
+    console.log("PLACEHOLDER for fb_ListenForPlayer1")
 }
 
 function fb_ListenForPlayer2() {
     //The host player, player 1 listens for player 2 to guess a number
+    console.log("PLACEHOLDER for fb_ListenForPlayer2")
+}
+
+function fb_Winner() {
+    //Tell the database who the winner is and change their statistics
+    //end the game
+    console.log("PLACEHOLDER for fb_Winner")
+}
+
+function fb_IdentifyPlayers() {
+    //Indentify which players are which
+    console.log("PLACEHOLDER for fb_IdentifyPlayers")
 }

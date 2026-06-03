@@ -25,7 +25,7 @@
   BODY
 ****************************************************-->
 
-<body onload="fb_initialise(); fb_detectLoginChange()">
+<body onload="fb_initialise(); fb_detectLoginChange(); fb_RandomNumberRec()">
 
   <div class="grid-container">
     <div class="grid-item item1">
@@ -42,10 +42,11 @@
       <main>
         <label for="name">Player 1:</label>
         <input type="number" id="player1Guess" player1Guess="player1Guess" required min="1" max="100" />
-        <button onclick="fb_RandomNumberRec();">Submit</button>
+        <button onclick="fb_WritePlayer1()">Submit</button>
         <h1>VS</h1>
         <label for="name">Player 2:</label>
         <input type="number" id="player2Guess" player2Guess="player2Guess" required min="1" max="100" />
+        <button onclick="fb_WritePlayer2()">Submit</button>
 
         <h3>Player 1 guesses:</h3>
 
