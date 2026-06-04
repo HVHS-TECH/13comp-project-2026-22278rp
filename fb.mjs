@@ -193,11 +193,11 @@ function fb_detectLoginChangeOnLoading() {
 }
 
 
-function fb_getUsername() {
+function fb_getUsername(ButtonUserId) {
     const DB = getDatabase();
     const dbReference = ref(DB, "Public/" + userId + "/userName");
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 1");
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 2")
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1");
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonUserId + "/Player2")
 
     get(dbReference).then((data) => {
         var fb_data = data.val();
@@ -512,7 +512,7 @@ function fb_readListener() {
                 if (fb_data[key]["isFilled"] == false) {
                     //the button appears on the lobby page
                     console.log("game is not full")
-                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "')>" + key + "'s game</button>"
+                    buttons.innerHTML += "<button onclick=fb_joinedGame('" + key + "'); fb_getUsername('" + key + "')>" + key + "'s game</button>"
                 }
                 else if (fb_data[key]["isFilled"] == true) {
                     //A buttons does not appear as the game is already full
@@ -560,15 +560,14 @@ function fb_joinedGame(buttonUserId) {
     console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';' );
     const DB = getDatabase();
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + buttonUserId);
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + buttonUserId + "/Player 2")
 
     update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("GAME FILLED")
-        location.href = "GTN.html";
+        //location.href = "GTN.html";
         update(player2Ref, {UserId: userId}).then(() => {
-            fb_getUsername();
+        console.log ("user recorded");
         })
 
     }).catch((error) => {
@@ -616,7 +615,7 @@ function fb_playerFoundListener() {
     const DB = getDatabase();
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId);
     const usernameRef = ref(DB, "/Public/" + userId);
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 1")
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1")
     console.log("/Games/GTN/hostedGames" + userId);
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
@@ -768,11 +767,12 @@ function fb_WritePlayer1() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 1");
+    var fb_data;
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1");
     const targetNumberRef = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Answer");
     get(targetNumberRef).then((snapshot) => {
 
-        var fb_data = snapshot.val();
+        fb_data = snapshot.val();
 
         if (fb_data != null) {
 
@@ -799,19 +799,19 @@ function fb_WritePlayer1() {
         //✅ Code for a successful write goes here
         console.log("Player 1 has guessed!")
         console.log(player1Guess.value);
-        if (player1Guess.innerHTML == fb_data) 
+        if (player1Guess.value == fb_data) 
         {
             console.log("You won");
             
         }
         
-        else if (player1Guess > fb_data )
+        else if (player1Guess.value > fb_data )
         {
             //If the user inputs a number over the target number
             console.log("Lower")
         }
         
-        else if (player1Guess.innerHTML < fb_data) 
+        else if (player1Guess.value < fb_data) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
@@ -829,7 +829,7 @@ function fb_WritePlayer2() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 2");
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player2");
 
     update(dbReference, { CurrentGuess: player2Guess}).then(() => {
   
