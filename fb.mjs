@@ -193,13 +193,44 @@ function fb_detectLoginChangeOnLoading() {
 function fb_getUsername() {
     const DB = getDatabase();
     const dbReference = ref(DB, "Public/" + userId + "/userName");
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player 1")
 
     get(dbReference).then((data) => {
         var fb_data = data.val();
         console.log("WOWEEWWWEE")
         console.log(fb_data);
         var name;
-        namedIndex.innerHTML = "Play my games " + fb_data + "!!!!!";
+        if (location.href == "gameLibrary.html") {
+            namedIndex.innerHTML = "Play my games " + fb_data + "!!!!!";
+        }
+
+        if (location.href == "loading.html") {
+             update(player1Ref, { userName: fb_data }).then(() => {
+
+                //✅ Code for a successful write goes here
+                console.log("successful write")
+
+            }).catch((error) => {
+
+                //❌ Code for a write error goes here
+                console.log("Writing error")
+            });
+        }
+
+         if (location.href == "lobby.html") {
+             update(player1Ref, { userName: fb_data }).then(() => {
+
+                //✅ Code for a successful write goes here
+                console.log("successful write")
+
+            }).catch((error) => {
+
+                //❌ Code for a write error goes here
+                console.log("Writing error")
+            });
+        }
+
+       
     });
 }
 
@@ -523,12 +554,17 @@ function fb_joinedGame(buttonUserId) {
     console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';' );
     const DB = getDatabase();
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + buttonUserId);
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + buttonUserId + "/Player 2")
 
     update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("GAME FILLED")
         location.href = "GTN.html";
+        update(player2Ref, {UserId: userId}).then(() => {
+                
+        })
+
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -585,9 +621,11 @@ function fb_playerFoundListener() {
             //✅ Code if another player had joined the host's game
             console.log("GAME HAS LOADED");
             location.href = "GTN.html"
-            update(player1Ref, {userName: name, UserId: userId}).then(() => {
-                
+            update(player1Ref, {UserId: userId}).then(() => {
+            fb_getUsername();
             })
+
+            
         }
         else {
             //✅ No one has joined the host's game yet

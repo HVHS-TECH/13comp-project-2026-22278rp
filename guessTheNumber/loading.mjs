@@ -12,7 +12,7 @@ console.log('%c main.mjs',
 // Import all external constants & functions required
 /**************************************************************/
 // Import all the constants & functions required from fb_io module
-import { fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChangeOnLoading, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, fb_joinedGame, fb_fillDatabase, fb_stopGame, fb_playerFoundListener }
+import { fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChangeOnLoading, fb_readListener, fb_logDatabaseRead, fb_sendAvailableGame, fb_joinedGame, fb_fillDatabase, fb_stopGame, fb_playerFoundListener, fb_RandomNumberRec }
     from '../fb.mjs';
     window.fb_initialise = fb_initialise;
     window.fb_authenticate = fb_authenticate;
@@ -25,6 +25,7 @@ import { fb_initialise, fb_authenticate, fb_logout, fb_detectLoginChangeOnLoadin
     window.fb_fillDatabase = fb_fillDatabase;
     window.fb_stopGame = fb_stopGame;
     window.fb_playerFoundListener = fb_playerFoundListener;
+    window.fb_RandomNumberRec = fb_RandomNumberRec;
 
 
 
