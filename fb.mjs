@@ -198,7 +198,7 @@ function fb_getUsername(ButtonUserId) {
     const dbReference = ref(DB, "Public/" + userId + "/userName");
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1");
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonUserId + "/Player2")
-
+    console.log(player2Ref);
     get(dbReference).then((data) => {
         var fb_data = data.val();
         console.log("WOWEEWWWEE")
@@ -560,7 +560,7 @@ function fb_joinedGame(buttonUserId) {
     console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';' );
     const DB = getDatabase();
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + buttonUserId);
-
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonUserId + "/Player2")
     update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
@@ -573,6 +573,7 @@ function fb_joinedGame(buttonUserId) {
     }).catch((error) => {
 
         //❌ Code for a write error goes here
+        console.log(error)
         console.log("Writing error")
     });
 
