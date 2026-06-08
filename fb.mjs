@@ -248,6 +248,7 @@ function fb_getUsername(ButtonUserId) {
     });
 }
 
+
 function fb_logout() {
     console.log('%c fb_logout(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
@@ -568,7 +569,6 @@ function fb_joinedGame(buttonUserId) {
 
         //✅ Code for a successful write goes here
         console.log (player2Ref);
-        //location.href = "GTN.html";
         console.log(userId)
         update(player2Ref, {UserId: userId}).then(() => {
         console.log ("user recorded");
@@ -818,12 +818,16 @@ function fb_WritePlayer1() {
         {
             //If the user inputs a number over the target number
             console.log("Lower")
+            update(dbReference, {TheirTurn: false}).then(() => {
+            })
         }
         
         else if (player1Guess.value < fb_TargetData) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
+            update(dbReference, {TheirTurn: false}).then(() => {
+            })
         }
 
     }).catch((error) => {
@@ -855,12 +859,16 @@ function fb_WritePlayer2() {
         {
             //If the user inputs a number over the target number
             console.log("Lower")
+            update(dbReference, {TheirTurn: false}).then(() => {
+            })
         }
         
         else if (player2Guess < targetNumber) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
+            update(dbReference, {TheirTurn: false}).then(() => {
+            })
         }
 
     }).catch((error) => {
@@ -873,11 +881,53 @@ function fb_WritePlayer2() {
 function fb_ListenForPlayer1() {
     //The non-host player, player 2 listens for player 1 to guess a number
     console.log("PLACEHOLDER for fb_ListenForPlayer1")
+     console.log('%c fb_ListenForPlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1")
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player2")
+    onValue(player1Ref, (snapshot) => {
+        console.log("record changed");
+        var fb_data = snapshot.val();
+        console.log (fb_data);
+        console.log(fb_data["TheirTurn"])
+        if(fb_data["TheirTurn"] == true) {
+            //✅ Remove player 2's button
+         
+        }
+        else if (fb_data["TheirTurn"] == false){
+            //Change to player 2's turn add their button
+            update(player2Ref, {TheirTurn: true}).then(() => {
+            buttonP2.innerHTML += "<button onclick=fb_WritePlayer2()>'Submit'</button>"
+            })
+
+        }
+    });
 }
 
 function fb_ListenForPlayer2() {
     //The host player, player 1 listens for player 2 to guess a number
     console.log("PLACEHOLDER for fb_ListenForPlayer2")
+    console.log('%c fb_ListenForPlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1")
+    
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player2")
+    onValue(player2Ref, (snapshot) => {
+        console.log("record changed");
+        var fb_data = snapshot.val();
+        console.log (fb_data);
+        console.log(fb_data["TheirTurn"])
+        if(fb_data["TheirTurn"] == true) {
+            //✅ Remove player 1's button
+         
+        }
+        else if (fb_data["TheirTurn"] == false){
+            //Change to player 1's turn add their button
+            update(player1Ref, {TheirTurn: true}).then(() => {
+            buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>'Submit'</button>"
+            })
+        }
+    });
 }
 
 function fb_Winner() {
