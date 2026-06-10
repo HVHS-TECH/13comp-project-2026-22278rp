@@ -13,6 +13,7 @@ var targetNumber = null;
 var fb_PicData = null;
 var fb_TargetData = null;
 var ButtonUserId;
+var gameId = null;
 
 //Imported functions and constants required
 import { initializeApp }
@@ -544,7 +545,8 @@ function fb_logDatabaseRead(snapshot) {
 function fb_sendAvailableGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/hostedGames/" + userId);
+    gameId =  Math.ceil(Math.random()*10000)
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
 
     update(dbReference, { isFilled: false }).then(() => {
 
@@ -645,10 +647,6 @@ function fb_playerFoundListener() {
     });
 }
 
-function fb_matchedPlayers() {
-    console.log('%c fb_matchedPlayers(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
-}
-
 function fb_error(error) {
     console.log("There was an error reading the message :(");
     console.error(error);
@@ -720,28 +718,6 @@ function fb_fillDatabase() {
 
 }
 
-function startGame () {
-    targetNumber =  Math.ceil(Math.random()*100)
-    console.log(targetNumber);
-    // If the user wins
-    if (player1Guess.innerHTML == targetNumber) 
-    {
-        console.log("You won");
-    }
-        
-    else if (player1Guess > targetNumber )
-    {
-        //If the user inputs a number over the target number
-        console.log("Lower")
-    }
-        
-    else if (player1Guess.innerHTML < targetNumber) 
-    {
-        //If the user gets the number incorrect and it needs to be higher
-        console.log("Higher")
-    }
-} 
- 
 function fb_RandomNumberRec() {
     const AUTH = getAuth();
     var targetNumber =  Math.ceil(Math.random()*100)
