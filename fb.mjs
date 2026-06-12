@@ -12,7 +12,7 @@ var userId = null;
 var targetNumber = null;
 var fb_PicData = null;
 var fb_TargetData = null;
-var ButtonUserId;
+var ButtonGameId;
 var gameId = null;
 
 //Imported functions and constants required
@@ -58,11 +58,13 @@ export {
      fb_playerFoundListener,
      fb_RandomNumberRec,
      fb_GetTargetNumber,
+     fb_StartGame,
      fb_WritePlayer1,
      fb_WritePlayer2,
      fb_ListenForPlayer1,
      fb_ListenForPlayer2,
      fb_Winner,
+     fb_DetectPlayers,
      //Score systems
      fb_readScores, 
      fb_displayScores, 
@@ -198,12 +200,14 @@ function fb_detectLoginChangeOnLoading() {
 }
 
 
-function fb_getUsername(ButtonUserId) {
+function fb_getUsername(ButtonGameId) {
     const DB = getDatabase();
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
     const dbReference = ref(DB, "Public/" + userId + "/userName");
     const profilePicRef = ref(DB, "Private/" + userId + "/profilepicture");
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1");
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonUserId + "/Player2")
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonGameId + "/Player2")
 
     get(profilePicRef).then((data) => {
         fb_PicData = data.val();
@@ -546,6 +550,7 @@ function fb_sendAvailableGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     gameId =  Math.ceil(Math.random()*10000)
+    sessionStorage.setItem("hostId", gameId);
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
 
     update(dbReference, { isFilled: false }).then(() => {
@@ -563,20 +568,21 @@ function fb_sendAvailableGame() {
 
 }
 
-function fb_joinedGame(ButtonUserId) {
+function fb_joinedGame(ButtonGameId) {
     console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';' );
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/hostedGames/" + ButtonUserId);
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonUserId + "/Player2")
+    gameId = ButtonGameId
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + gameId + "/Player2")
     update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
         console.log (player2Ref);
         console.log(userId)
         update(player2Ref, {UserId: userId}).then(() => {
-        sessionStorage.setItem("hostId", ButtonUserId);
+        sessionStorage.setItem("hostId", gameId);
         console.log ("user recorded");
-        fb_getUsername(ButtonUserId);
+        fb_getUsername(ButtonGameId);
         })
 
     }).catch((error) => {
@@ -591,7 +597,7 @@ function fb_joinedGame(ButtonUserId) {
 function fb_stopGame() {
     console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/hostedGames/" + userId);
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
 
     remove(dbReference).then(() => {
 
@@ -623,9 +629,11 @@ function fb_displayScores(snapshot) {
 function fb_playerFoundListener() {
     console.log('%c fb_playerFoundListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId);
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1")
-    console.log("/Games/GTN/hostedGames" + userId);
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
+    console.log("/Games/GTN/hostedGames" + HostID);
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
@@ -724,8 +732,10 @@ function fb_RandomNumberRec() {
     console.log('%c fb_RandomNumberRec(): ',
         'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
-    console.log(userId)
-    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId);
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
+    console.log(HostID)
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
 
     update(dbReference, { Answer: targetNumber }).then(() => {
 
@@ -773,11 +783,25 @@ function fb_GetTargetNumber() {
 
 }
 
+function fb_StartGame() {
+    const AUTH = getAuth();
+    console.log('%c fb_StartGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    const DB = getDatabase()
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
+    update(player1Ref, {TheirTurn: true}).then(() => {
+        buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>'Submit'</button>"
+    })
+}
+
 function fb_WritePlayer1() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1");
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
     
     update(dbReference, { CurrentGuess: player1Guess.value}).then(() => {
   
@@ -859,12 +883,13 @@ function fb_WritePlayer2() {
 
 function fb_ListenForPlayer1() {
     //The non-host player, player 2 listens for player 1 to guess a number
-    console.log("PLACEHOLDER for fb_ListenForPlayer1")
-     console.log('%c fb_ListenForPlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    console.log('%c fb_ListenForPlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     let HostID = sessionStorage.getItem("hostId");
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
+    console.log (player1Ref);
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
+    console.log (player2Ref);
     onValue(player1Ref, (snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
@@ -889,10 +914,10 @@ function fb_ListenForPlayer2() {
     console.log("PLACEHOLDER for fb_ListenForPlayer2")
     console.log('%c fb_ListenForPlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1")
-    
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player2")
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
     onValue(player2Ref, (snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
@@ -917,22 +942,20 @@ function fb_Winner() {
     console.log("PLACEHOLDER for fb_Winner")
 }
 
-
-function fb_DisplayPlayerInfo() {
-    const DB = getDatabase();
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId);
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + ButtonUserId);
-}
-
-function fb_DefinePlayers () {
+function fb_DetectPlayers() {
+     //The host player, player 1 listens for player 2 to guess a number
+    console.log('%c fb_DetectPlayers(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     let HostID = sessionStorage.getItem("hostId");
-    if (userId != HostID) {
-        
-    } 
-    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player1");
-    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + userId + "/Player2")
+    console.log(HostID);
+    const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
+    if(player1Ref["UserId"] == userId) {
+        fb_ListenForPlayer2();
+    }
+
+    if(player2Ref["UserId"] == userId) {
+        fb_ListenForPlayer1();
+    }
     
-
-
 }
