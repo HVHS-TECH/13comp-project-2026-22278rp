@@ -790,8 +790,12 @@ function fb_StartGame() {
     let HostID = sessionStorage.getItem("hostId");
     console.log(HostID);
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
+    const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
     update(player1Ref, {TheirTurn: true}).then(() => {
-        buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>'Submit'</button>"
+        
+    })
+    update(player2Ref, {TheirTurn: false}).then(() => {
+        
     })
 }
 
@@ -902,7 +906,7 @@ function fb_ListenForPlayer1() {
         else if (fb_data["TheirTurn"] == false){
             //Change to player 2's turn add their button
             update(player2Ref, {TheirTurn: true}).then(() => {
-            buttonP2.innerHTML += "<button onclick=fb_WritePlayer2()>'Submit'</button>"
+            buttonP2.innerHTML += "<button onclick=fb_WritePlayer2()>Submit</button>"
             })
 
         }
@@ -912,7 +916,7 @@ function fb_ListenForPlayer1() {
 function fb_ListenForPlayer2() {
     //The host player, player 1 listens for player 2 to guess a number
     console.log("PLACEHOLDER for fb_ListenForPlayer2")
-    console.log('%c fb_ListenForPlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    console.log('%c fb_ListenForPlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     let HostID = sessionStorage.getItem("hostId");
     console.log(HostID);
@@ -930,7 +934,7 @@ function fb_ListenForPlayer2() {
         else if (fb_data["TheirTurn"] == false){
             //Change to player 1's turn add their button
             update(player1Ref, {TheirTurn: true}).then(() => {
-            buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>'Submit'</button>"
+            buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>Submit</button>"
             })
         }
     });
@@ -950,11 +954,12 @@ function fb_DetectPlayers() {
     console.log(HostID);
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
+    console.log(player1Ref["UserId"]);
+    console.log(player2Ref["UserId"]);
     if(player1Ref["UserId"] == userId) {
         fb_ListenForPlayer2();
     }
-
-    if(player2Ref["UserId"] == userId) {
+    else if(player2Ref["UserId"] == userId) {
         fb_ListenForPlayer1();
     }
     
