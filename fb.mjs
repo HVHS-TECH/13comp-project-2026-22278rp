@@ -822,6 +822,8 @@ function fb_WritePlayer1() {
         {
             //If the user inputs a number over the target number
             console.log("Lower")
+            currentGuess.innerHTML = "Current Guess: " + player1Guess.value;
+            isItClose.innerHTML = "Lower than the Number";
             update(dbReference, {TheirTurn: false}).then(() => {
             })
         }
@@ -830,6 +832,8 @@ function fb_WritePlayer1() {
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
+            currentGuess.innerHTML = "Current Guess: " + player1Guess.value;
+            isItClose.innerHTML = "Higher than the Number";
             update(dbReference, {TheirTurn: false}).then(() => {
             })
         }
@@ -848,32 +852,39 @@ function fb_WritePlayer2() {
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
     console.log(HostID);
+    console.log(targetNumber)
 
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2");
 
-    update(dbReference, { CurrentGuess: player2Guess}).then(() => {
+    update(dbReference, { CurrentGuess: player2Guess.value}).then(() => {
   
         //✅ Code for a successful write goes here
-        console.log("Player 1 has guessed!")
-        console.log(player2Guess);
-        if (player2Guess == targetNumber) 
+        console.log("Player 2 has guessed!")
+        console.log(player2Guess.value);
+        if (player2Guess.value == targetNumber) 
         {
             console.log("You won");
+            currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
+            isItClose.innerHTML = "You Won!";
             
         }
         
-        else if (player2Guess > targetNumber )
+        else if (player2Guess.value > targetNumber )
         {
             //If the user inputs a number over the target number
             console.log("Lower")
+            currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
+            isItClose.innerHTML = "Lower than the Number";
             update(dbReference, {TheirTurn: false}).then(() => {
             })
         }
         
-        else if (player2Guess < targetNumber) 
+        else if (player2Guess.value < targetNumber) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
+            currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
+            isItClose.innerHTML = "Higher than the Number";
             update(dbReference, {TheirTurn: false}).then(() => {
             })
         }
@@ -896,6 +907,7 @@ function fb_ListenForPlayer1() {
     console.log (player2Ref);
     onValue(player1Ref, (snapshot) => {
         console.log("record changed");
+        buttonP2.innerHTML = null
         var fb_data = snapshot.val();
         console.log (fb_data);
         console.log(fb_data["TheirTurn"])
@@ -924,6 +936,7 @@ function fb_ListenForPlayer2() {
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
     onValue(player2Ref, (snapshot) => {
         console.log("record changed");
+        buttonP1.innerHTML = null
         var fb_data = snapshot.val();
         console.log (fb_data);
         console.log(fb_data["TheirTurn"])
@@ -954,13 +967,34 @@ function fb_DetectPlayers() {
     console.log(HostID);
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
-    console.log(player1Ref["UserId"]);
-    console.log(player2Ref["UserId"]);
-    if(player1Ref["UserId"] == userId) {
-        fb_ListenForPlayer2();
-    }
-    else if(player2Ref["UserId"] == userId) {
-        fb_ListenForPlayer1();
-    }
-    
+    get(player1Ref).then((snapshot) => {
+        console.log("record changed");
+        var fb_data = snapshot.val();
+        console.log (fb_data);
+        console.log(fb_data["UserId"])
+        if(fb_data["UserId"] == userId) {
+            fb_ListenForPlayer2();
+         
+            
+        }
+        else {
+            //✅ No one has joined the host's game yet
+            console.log("not player 1");
+        }
+    });
+    get(player2Ref).then((snapshot) => {
+        console.log("record changed");
+        var fb_data = snapshot.val();
+        console.log (fb_data);
+        console.log(fb_data["UserId"])
+        if(fb_data["UserId"] == userId) {
+            fb_ListenForPlayer1();
+         
+            
+        }
+        else {
+            //✅ No one has joined the host's game yet
+            console.log("not player 2");
+        }
+    });
 }
