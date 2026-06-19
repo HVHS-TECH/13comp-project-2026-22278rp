@@ -823,6 +823,7 @@ function fb_WritePlayer1() {
             console.log("You won");
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
+            alert("you won");
             fb_stopGame();
         }
         
@@ -876,11 +877,12 @@ function fb_WritePlayer2() {
             console.log("You won");
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
+            alert("you won");
             fb_stopGame();
             
         }
         
-        else if (player2Guess.value > Answer )
+        else if (player2Guess.value < Answer )
         {
             //If the user inputs a number over the target number
             console.log("Lower")
@@ -890,7 +892,7 @@ function fb_WritePlayer2() {
             })
         }
         
-        else if (player2Guess.value < Answer) 
+        else if (player2Guess.value > Answer) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
