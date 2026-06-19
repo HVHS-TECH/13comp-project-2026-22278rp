@@ -595,14 +595,16 @@ function fb_joinedGame(ButtonGameId) {
 }
 
 function fb_stopGame() {
-    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    console.log('%c fb_stopGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
+    let HostID = sessionStorage.getItem("hostId");
+    const dbReference = ref(DB, "Games/GTN/hostedGames/" + HostID);
 
     remove(dbReference).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("GAME REMOVED")
+        location.href = "lobby.html";
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -767,6 +769,8 @@ function fb_GetTargetNumber() {
 
             //✅ Code for a successful read goes here
             console.log("Answer had been found");
+            console.log(fb_TargetData);
+            sessionStorage.setItem("Answer", fb_TargetData);
         } else {
 
             //✅ Code for no record found goes here
@@ -804,6 +808,8 @@ function fb_WritePlayer1() {
     console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
+    let Answer = sessionStorage.getItem("Answer");
+    console.log(Answer);
     console.log(HostID);
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
     
@@ -812,13 +818,15 @@ function fb_WritePlayer1() {
         //✅ Code for a successful write goes here
         console.log("Player 1 has guessed!")
         console.log(player1Guess.value);
-        if (player1Guess.value == fb_TargetData) 
+        if (player1Guess.value == Answer) 
         {
             console.log("You won");
-            
+            currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
+            isItClose.innerHTML = "You Won!";
+            fb_stopGame();
         }
         
-        else if (player1Guess.value > fb_TargetData )
+        else if (player1Guess.value < Answer )
         {
             //If the user inputs a number over the target number
             console.log("Lower")
@@ -828,7 +836,7 @@ function fb_WritePlayer1() {
             })
         }
         
-        else if (player1Guess.value < fb_TargetData) 
+        else if (player1Guess.value > Answer) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
@@ -851,6 +859,8 @@ function fb_WritePlayer2() {
     console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
+    let Answer = sessionStorage.getItem("Answer");
+    console.log(Answer);
     console.log(HostID);
     console.log(targetNumber)
 
@@ -861,15 +871,16 @@ function fb_WritePlayer2() {
         //✅ Code for a successful write goes here
         console.log("Player 2 has guessed!")
         console.log(player2Guess.value);
-        if (player2Guess.value == targetNumber) 
+        if (player2Guess.value == Answer) 
         {
             console.log("You won");
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
+            fb_stopGame();
             
         }
         
-        else if (player2Guess.value > targetNumber )
+        else if (player2Guess.value > Answer )
         {
             //If the user inputs a number over the target number
             console.log("Lower")
@@ -879,7 +890,7 @@ function fb_WritePlayer2() {
             })
         }
         
-        else if (player2Guess.value < targetNumber) 
+        else if (player2Guess.value < Answer) 
         {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
