@@ -166,7 +166,7 @@ function fb_detectLoginChangeGame() {
             userId = user.uid;
             console.log(name)
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
-            userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
+            //userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
             fb_getUsername();
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
@@ -287,7 +287,7 @@ function fb_WriteRec() {
 
     const dbReference = ref(DB, "Public/" + userId);
 
-    update(dbReference, { userName: name }).then(() => {
+    update(dbReference, { userName: name, GTNWins: 0}).then(() => {
 
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -830,6 +830,7 @@ function fb_WritePlayer1() {
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
+            
             update(WinReference, {playerHasWon: true}).then(() => {
             })
         }
@@ -1010,12 +1011,13 @@ function fb_DetectPlayers() {
     get(player1Ref).then((snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
+        p1Photo.innerHTML = "<img src =" + fb_data["profilepicture"] + "> </img>"
+        p1Name.innerHTML = "P1: " + fb_data["userName"];
         console.log (fb_data);
+
         console.log(fb_data["UserId"])
         if(fb_data["UserId"] == userId) {
             fb_ListenForPlayer2();
-         
-            
         }
         else {
             //✅ No one has joined the host's game yet
@@ -1025,6 +1027,8 @@ function fb_DetectPlayers() {
     get(player2Ref).then((snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
+        p2Photo.innerHTML = "<img src =" + fb_data["profilepicture"] + "> </img>"
+        p2Name.innerHTML = "P2: " + fb_data["userName"];
         console.log (fb_data);
         console.log(fb_data["UserId"])
         if(fb_data["UserId"] == userId) {
