@@ -63,7 +63,7 @@ export {
      fb_WritePlayer2,
      fb_ListenForPlayer1,
      fb_ListenForPlayer2,
-     fb_Winner,
+     fb_WinnerListener,
      fb_DetectPlayers,
      //Score systems
      fb_readScores, 
@@ -795,11 +795,16 @@ function fb_StartGame() {
     console.log(HostID);
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID)
     update(player1Ref, {TheirTurn: true}).then(() => {
         
     })
     update(player2Ref, {TheirTurn: false}).then(() => {
         
+    })
+
+    update(dbReference, {playerHasWon: false}).then(() => {
+        fb_WinnerListener();
     })
 }
 
@@ -812,6 +817,7 @@ function fb_WritePlayer1() {
     console.log(Answer);
     console.log(HostID);
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
+    const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
     
     update(dbReference, { CurrentGuess: player1Guess.value}).then(() => {
   
@@ -824,7 +830,8 @@ function fb_WritePlayer1() {
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
-            fb_stopGame();
+            update(WinReference, {playerHasWon: true}).then(() => {
+            })
         }
         
         else if (player1Guess.value < Answer )
@@ -866,6 +873,7 @@ function fb_WritePlayer2() {
     console.log(targetNumber)
 
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2");
+    const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
 
     update(dbReference, { CurrentGuess: player2Guess.value}).then(() => {
   
@@ -878,7 +886,8 @@ function fb_WritePlayer2() {
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
-            fb_stopGame();
+            update(WinReference, {playerHasWon: true}).then(() => {
+            })
             
         }
         
@@ -966,10 +975,28 @@ function fb_ListenForPlayer2() {
     });
 }
 
-function fb_Winner() {
+function fb_WinnerListener() {
     //Tell the database who the winner is and change their statistics
     //end the game
     console.log("PLACEHOLDER for fb_Winner")
+    console.log('%c fb_WinnerListener(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase();
+    let HostID = sessionStorage.getItem("hostId");
+    console.log(HostID);
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID)
+    
+    onValue(dbReference, (snapshot) => {
+        console.log("record changed");
+        var fb_data = snapshot.val();
+        console.log (fb_data);
+        if(fb_data["playerHasWon"] == true) {
+            alert("A player has guessed the number!");
+            fb_stopGame();
+        }
+        else if (fb_data["playerHasWon"] == false){
+            console.log("No Winner")
+        }
+    });
 }
 
 function fb_DetectPlayers() {
