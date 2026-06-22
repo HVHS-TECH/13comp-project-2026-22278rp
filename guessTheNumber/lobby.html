@@ -16,7 +16,7 @@
 </head>
 
 
-<body onload="fb_initialise(); fb_detectLoginChange(); fb_readListener()" id="lobbyIdentifier">
+<body onload="fb_initialise(); fb_detectLoginChange(); fb_readListener(); fb_displayGTNScores()" id="lobbyIdentifier">
 
 <div class="grid-container">
     <div class="grid-item item1">
@@ -40,7 +40,11 @@
     </div>
     <div class="grid-item item3">
       <main>
+        <h1>Instructions:</h1>
+        <p>In Guess the Number, a random number is selected and you and another player have to take turns trying to guess it, until someone wins!</p>
+
         <h1>Leaderboard:</h1>
+        <div id = gtnLeaderboard></div>
       </main>
     </div>
     <div class="grid-item item4">

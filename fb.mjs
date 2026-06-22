@@ -67,7 +67,7 @@ export {
      fb_DetectPlayers,
      //Score systems
      fb_readScores, 
-     fb_displayScores, 
+     fb_displayGTNScores,
      fb_error 
     }
 //Firebase Functions
@@ -623,9 +623,21 @@ function fb_readScores() {
     //})
 }
 
-function fb_displayScores(snapshot) {
-    let Scores = snapshot.val()
-    console.log("Ryan got " + Scores["Ryan Parks"] + " points")
+function fb_displayGTNScores() {
+    console.log('%c fb_displayGTNScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
+    const DB = getDatabase()
+    var sortKey = "GTNWins";
+    const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(3));
+    get(dbReference).then((Snapshot) => {
+        // Do Stuff
+    });
+    get(dbReference).then((allScoreDataSnapshot) => {
+        allScoreDataSnapshot.forEach(function (userScoreSnapshot) {
+            var obj = userScoreSnapshot.val();
+            console.log(obj);
+        });
+    });
+
 }
 
 function fb_playerFoundListener() {
