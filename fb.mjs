@@ -18,7 +18,7 @@ var gameId = null;
 //Imported functions and constants required
 import { initializeApp }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, update, remove, onValue }
+import { getDatabase, ref, update, remove, onValue, query, orderByChild, limitToFirst }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
@@ -166,7 +166,7 @@ function fb_detectLoginChangeGame() {
             userId = user.uid;
             console.log(name)
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
-            //userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
+            userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
             fb_getUsername();
         } else {
             console.log("⚠️ Not logged in — redirecting to registration.html");
@@ -549,7 +549,7 @@ function fb_logDatabaseRead(snapshot) {
 function fb_sendAvailableGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    gameId =  Math.ceil(Math.random()*10000)
+    gameId =  Math.ceil(Math.random()*1000000)
     sessionStorage.setItem("hostId", gameId);
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
 
@@ -627,16 +627,41 @@ function fb_displayGTNScores() {
     console.log('%c fb_displayGTNScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     var sortKey = "GTNWins";
-    const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(3));
+    const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(5));
     get(dbReference).then((Snapshot) => {
-        // Do Stuff
+        console.log(sortKey)
+        var GTNrank = 1;
+        const users = [];
     });
     get(dbReference).then((allScoreDataSnapshot) => {
         allScoreDataSnapshot.forEach(function (userScoreSnapshot) {
             var obj = userScoreSnapshot.val();
+            var rank = 1;
+            const users = [];
+            gtnLeaderboard += "<tr>"
+            users.reverse();
             console.log(obj);
         });
     });
+    /*const table = document.getElementById("highScoreTableCoin");
+    table.innerHTML = "";//added by chatgpt
+
+    get(dbReference).then((snapshot) => {
+        var rank = 1;
+        const users = [];
+        snapshot.forEach((userSnap) => { //added by ChatGpt
+            users.push(userSnap.val());//added by ChatGpt
+        });
+        users.reverse();
+        users.forEach((obj) => {
+            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
+            rank++;//chatgpt added this
+        });
+    }).catch((error) => {
+        //❌ Code for a sorted read error goes here
+        console.log("Sorting failed", error);
+    });
+}*/
 
 }
 
@@ -887,6 +912,7 @@ function fb_WritePlayer2() {
 
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2");
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
+    const WinAmountRef = ref(DB, "/Public/" + userId);
 
     update(dbReference, { CurrentGuess: player2Guess.value}).then(() => {
   
@@ -901,6 +927,10 @@ function fb_WritePlayer2() {
             alert("you won");
             update(WinReference, {playerHasWon: true}).then(() => {
             })
+            
+            /*update(WinAmountRef, {GTNWins: ++ 1}).then(() => {
+
+            })*/
             
         }
         

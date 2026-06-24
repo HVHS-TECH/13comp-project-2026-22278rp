@@ -2,7 +2,7 @@
 // Import all external constants & functions required
 /**************************************************************/
 // Import all the constants & functions required from fb_io module
-import { fb_initialise, fb_authenticate, fb_logout, fb_WriteRec, fb_DeleteRec, fb_WriteRecPrivate, fb_ReadRec, fb_detectLoginChange, fb_detectLoginChangeGame, fb_readScores, fb_displayScores  }
+import { fb_initialise, fb_authenticate, fb_logout, fb_WriteRec, fb_DeleteRec, fb_WriteRecPrivate, fb_ReadRec, fb_detectLoginChange, fb_detectLoginChangeGame, fb_readScores}
     from './fb.mjs';
     window.fb_initialise = fb_initialise;
     window.fb_authenticate = fb_authenticate;
@@ -14,4 +14,3 @@ import { fb_initialise, fb_authenticate, fb_logout, fb_WriteRec, fb_DeleteRec, f
     window.fb_detectLoginChangeGame = fb_detectLoginChangeGame;
     window.fb_logout =  fb_logout;
     window.fb_readScores = fb_readScores;
-    window.fb_displayScores = fb_displayScores;
