@@ -604,7 +604,7 @@ function fb_stopGame() {
 
         //✅ Code for a successful write goes here
         console.log("GAME REMOVED")
-        location.href = "lobby.html";
+        //location.href = "lobby.html";
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -628,6 +628,7 @@ function fb_displayGTNScores() {
     const DB = getDatabase()
     var sortKey = "GTNWins";
     const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(5));
+    const userNameRef = ref(DB, "Games/GTN/hostedGames/" + HostID);
     get(dbReference).then((Snapshot) => {
         console.log(sortKey)
         var GTNrank = 1;
@@ -638,7 +639,7 @@ function fb_displayGTNScores() {
             var obj = userScoreSnapshot.val();
             var rank = 1;
             const users = [];
-            gtnLeaderboard += "<tr>"
+            gtnLeaderboard += "<tr><td>" + rank + "</td><td>" + obj.UserName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";
             users.reverse();
             console.log(obj);
         });
@@ -845,16 +846,60 @@ function fb_StartGame() {
     })
 }
 
-function fb_WritePlayer1() {
+function fb_addAwin() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
+    var gtnWins = null;
     let HostID = sessionStorage.getItem("hostId");
     let Answer = sessionStorage.getItem("Answer");
     console.log(Answer);
     console.log(HostID);
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
+    const WinAmountRef = ref(DB, "/Public/" + userId + "GTNWins/");
+    console.log(WinAmountRef);
+    
+    get(WinAmountRef).then((snapshot) => {
+
+        gtnWins = snapshot.val();
+        console.log(gtnWins);
+        gtnWins++
+
+    }).catch((error) => {
+
+        //❌ Code for a read error goes here
+        console.log("failed to add a win");
+
+    });
+    
+}
+
+function fb_WritePlayer1() {
+    const AUTH = getAuth();
+    console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    const DB = getDatabase()
+    var gtnWins = null;
+    let HostID = sessionStorage.getItem("hostId");
+    let Answer = sessionStorage.getItem("Answer");
+    console.log(Answer);
+    console.log(HostID);
+    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
+    const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
+    const WinAmountRef = ref(DB, "/Public/" + userId + "GTNWins/");
+    console.log(WinAmountRef);
+    
+    get(WinAmountRef).then((snapshot) => {
+
+        gtnWins = snapshot.val();
+        console.log(gtnWins);
+
+    }).catch((error) => {
+
+        //❌ Code for a read error goes here
+        console.log("failed to add a win");
+
+    });
     
     update(dbReference, { CurrentGuess: player1Guess.value}).then(() => {
   
@@ -867,6 +912,7 @@ function fb_WritePlayer1() {
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
+            gtnWins++
             
             update(WinReference, {playerHasWon: true}).then(() => {
             })
@@ -904,6 +950,7 @@ function fb_WritePlayer2() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
+    var gtnWins = null;
     let HostID = sessionStorage.getItem("hostId");
     let Answer = sessionStorage.getItem("Answer");
     console.log(Answer);
@@ -913,24 +960,35 @@ function fb_WritePlayer2() {
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2");
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
     const WinAmountRef = ref(DB, "/Public/" + userId);
+    console.log(WinAmountRef);
+
+    get(WinAmountRef).then((snapshot) => {
+
+        gtnWins = snapshot.val();
+        console.log(gtnWins);
+
+    }).catch((error) => {
+
+        //❌ Code for a read error goes here
+        console.log("failed to add a win");
+
+    });
 
     update(dbReference, { CurrentGuess: player2Guess.value}).then(() => {
   
         //✅ Code for a successful write goes here
         console.log("Player 2 has guessed!")
         console.log(player2Guess.value);
+        
         if (player2Guess.value == Answer) 
         {
             console.log("You won");
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
+            gtnWins++
             update(WinReference, {playerHasWon: true}).then(() => {
             })
-            
-            /*update(WinAmountRef, {GTNWins: ++ 1}).then(() => {
-
-            })*/
             
         }
         
