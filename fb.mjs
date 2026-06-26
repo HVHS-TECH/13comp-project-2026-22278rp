@@ -850,22 +850,18 @@ function fb_AddAWin() {
     const AUTH = getAuth();
     console.log('%c fb_AddAWin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    var gtnWins = null;
-    const WinAmountRef = ref(DB, "/Public/" + userId + "/GTNWins");
+    const WinAmountRef = ref(DB, "Public/" + userId);
     console.log(WinAmountRef);
     
     get(WinAmountRef).then((snapshot) => {
-
-        gtnWins = snapshot.val();
-        gtnWins[GTNWins]++;
-        console.log(gtnWins[GTNWins]);
-        update(WinAmountRef, {GTNWins: gtnWins[GTNWins]}).then(() => {
-        })
-
+        const gtnWins = snapshot.val(); //TODO gtnWins is not a number, need to fix this
+        const gtnNewWin = gtnWins + 1;
+        console.log(gtnNewWin);
+        update(WinAmountRef, {GTNWins: gtnNewWin}).then(() => {
         
-
+        })
     }).catch((error) => {
-
+        console.log(error);
         //❌ Code for a read error goes here
         console.log("failed to add a win");
 

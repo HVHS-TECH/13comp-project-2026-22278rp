@@ -8,20 +8,20 @@ grid-template-areas:
 }
 
 .grid-item {
-  background-color: #EDE7E3; 
+  background-color: #fffcf2; 
   border-style:groove;
 }
 
 .item1 {
   grid-area: links ;
-  background-color:#16697A; display:inline-block;
+  background-color:#403d39; display:inline-block;
   color:#ffffff; 
   
 }
 
 .item2 {
 grid-area: header ;
-background-color:#FFA62B;
+background-color:#eb5e28;
 color:#1B1F3B; 
 text-align:center;
 }
@@ -35,7 +35,7 @@ text-align:center;
   grid-area:footer;
   
   text-align:center;
-  background-color:#82C0CC;
+  background-color:#ccc5b9;
   color:#000000; 
 }
 
@@ -43,14 +43,14 @@ text-align:center;
   margin-top: 1.5rem;
   font-size: 0.9rem;
   padding: 1.2rem 2.5rem;
-  background-color: #16697A;
+  background-color: #403d39;
   color: white;
-  border: 8px #0a323a;
+  border: 8px #252422;
   border-radius: 6px;
   cursor: pointer;
   margin-left:10px;
 }
 .navButtons:hover {
-  background-color:#0a323a; /* Green */
+  background-color:#252422; /* Green */
   color: white;
 }
