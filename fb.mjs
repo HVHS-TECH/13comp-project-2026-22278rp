@@ -67,6 +67,7 @@ export {
      fb_DetectPlayers,
      //Score systems
      fb_readScores, 
+     fb_AddAWin,
      fb_displayGTNScores,
      fb_error 
     }
@@ -406,7 +407,6 @@ function fb_ReadRec() {
 }
 //2025
 function fb_writeScoreCoin(userScoreCoin) {
-    console.log("Look I'm Writing!")
     console.log(userScoreCoin);
     console.log('%c fb_writeScoreCoin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
@@ -846,25 +846,23 @@ function fb_StartGame() {
     })
 }
 
-function fb_addAwin() {
+function fb_AddAWin() {
     const AUTH = getAuth();
-    console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    console.log('%c fb_AddAWin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
     var gtnWins = null;
-    let HostID = sessionStorage.getItem("hostId");
-    let Answer = sessionStorage.getItem("Answer");
-    console.log(Answer);
-    console.log(HostID);
-    const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
-    const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
-    const WinAmountRef = ref(DB, "/Public/" + userId + "GTNWins/");
+    const WinAmountRef = ref(DB, "/Public/" + userId + "/GTNWins");
     console.log(WinAmountRef);
     
     get(WinAmountRef).then((snapshot) => {
 
         gtnWins = snapshot.val();
-        console.log(gtnWins);
-        gtnWins++
+        gtnWins[GTNWins]++;
+        console.log(gtnWins[GTNWins]);
+        update(WinAmountRef, {GTNWins: gtnWins[GTNWins]}).then(() => {
+        })
+
+        
 
     }).catch((error) => {
 
