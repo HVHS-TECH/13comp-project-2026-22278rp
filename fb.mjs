@@ -18,7 +18,7 @@ var gameId = null;
 //Imported functions and constants required
 import { initializeApp }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, update, remove, onValue, query, orderByChild, limitToFirst }
+import { getDatabase, ref, update, remove, onValue, query, orderByChild, limitToFirst, set }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
@@ -287,15 +287,16 @@ function fb_WriteRec() {
     const DB = getDatabase()
 
     const dbReference = ref(DB, "Public/" + userId);
+    const gtnWins = ref(DB, "Public/" + userId + "/GTNWins")
 
-    update(dbReference, { userName: name, GTNWins: 0}).then(() => {
-
+    update(dbReference, { userName: name}).then(() => {
+        set(gtnWins, 0)
         //✅ Code for a successful write goes here
         console.log("successful write")
         fb_WriteRecPrivate();
 
     }).catch((error) => {
-
+        console.log(error);
         //❌ Code for a write error goes here
         console.log("Writing error")
     });
@@ -850,14 +851,15 @@ function fb_AddAWin() {
     const AUTH = getAuth();
     console.log('%c fb_AddAWin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    const WinAmountRef = ref(DB, "Public/" + userId);
-    console.log(WinAmountRef);
+    const gtnWins = ref(DB, "Public/" + userId + "/GTNWins");
     
-    get(WinAmountRef).then((snapshot) => {
-        const gtnWins = snapshot.val(); //TODO gtnWins is not a number, need to fix this
-        const gtnNewWin = gtnWins + 1;
+    get(gtnWins).then((snapshot) => {
+        const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
+        console.log(fb_data);
+        var gtnNewWin = fb_data
+        gtnNewWin++
         console.log(gtnNewWin);
-        update(WinAmountRef, {GTNWins: gtnNewWin}).then(() => {
+        update(gtnWins, {GTNWins: gtnNewWin}).then(() => {
         
         })
     }).catch((error) => {
