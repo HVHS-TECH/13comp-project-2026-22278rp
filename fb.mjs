@@ -66,7 +66,6 @@ export {
      fb_WinnerListener,
      fb_DetectPlayers,
      //Score systems
-     fb_readScores, 
      fb_AddAWin,
      fb_displayGTNScores,
      fb_error 
@@ -605,7 +604,7 @@ function fb_stopGame() {
 
         //✅ Code for a successful write goes here
         console.log("GAME REMOVED")
-        //location.href = "lobby.html";
+        location.href = "lobby.html";
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -615,18 +614,10 @@ function fb_stopGame() {
 }
 
 
-function fb_readScores() {
-    console.log('%c fb_readScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
-    const DB = getDatabase()
-    // const dbReference = ref(DB, "/Scores/LL").once('value', fb_displayScores, fb_error);
-    //once(dbReference, (snapshot) => {
-    //    console.log("Scores read");
-    //})
-}
-
 function fb_displayGTNScores() {
     console.log('%c fb_displayGTNScores(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
+    let HostID = sessionStorage.getItem("hostId");
     var sortKey = "GTNWins";
     const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(5));
     const userNameRef = ref(DB, "Games/GTN/hostedGames/" + HostID);
@@ -851,16 +842,17 @@ function fb_AddAWin() {
     const AUTH = getAuth();
     console.log('%c fb_AddAWin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    const gtnWins = ref(DB, "Public/" + userId + "/GTNWins");
+    const gtnWins = ref(DB, "Public/" + userId);
     
     get(gtnWins).then((snapshot) => {
         const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
         console.log(fb_data);
-        var gtnNewWin = fb_data
-        gtnNewWin++
+        var gtnNewWin = fb_data;
+        gtnNewWin["GTNWins"]++
+        console.log( "Public/" + userId + "/GTNWins" ,gtnNewWin)
         console.log(gtnNewWin);
-        update(gtnWins, {GTNWins: gtnNewWin}).then(() => {
-        
+        set(gtnWins ,gtnNewWin).then(() => {
+            
         })
     }).catch((error) => {
         console.log(error);
@@ -875,27 +867,13 @@ function fb_WritePlayer1() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    var gtnWins = null;
     let HostID = sessionStorage.getItem("hostId");
     let Answer = sessionStorage.getItem("Answer");
     console.log(Answer);
     console.log(HostID);
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
-    const WinAmountRef = ref(DB, "/Public/" + userId + "GTNWins/");
-    console.log(WinAmountRef);
-    
-    get(WinAmountRef).then((snapshot) => {
-
-        gtnWins = snapshot.val();
-        console.log(gtnWins);
-
-    }).catch((error) => {
-
-        //❌ Code for a read error goes here
-        console.log("failed to add a win");
-
-    });
+    const gtnWins = ref(DB, "Public/" + userId);
     
     update(dbReference, { CurrentGuess: player1Guess.value}).then(() => {
   
@@ -908,10 +886,24 @@ function fb_WritePlayer1() {
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
-            gtnWins++
-            
             update(WinReference, {playerHasWon: true}).then(() => {
             })
+            get(gtnWins).then((snapshot) => {
+                const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
+                console.log(fb_data);
+                var gtnNewWin = fb_data;
+                gtnNewWin["GTNWins"]++
+                console.log( "Public/" + userId + "/GTNWins" ,gtnNewWin)
+                console.log(gtnNewWin);
+                set(gtnWins,gtnNewWin).then(() => {
+            
+            })
+            }).catch((error) => {
+                console.log(error);
+                //❌ Code for a read error goes here
+                console.log("failed to add a win");
+
+            });
         }
         
         else if (player1Guess.value < Answer )
@@ -946,7 +938,6 @@ function fb_WritePlayer2() {
     const AUTH = getAuth();
     console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
     const DB = getDatabase()
-    var gtnWins = null;
     let HostID = sessionStorage.getItem("hostId");
     let Answer = sessionStorage.getItem("Answer");
     console.log(Answer);
@@ -955,20 +946,7 @@ function fb_WritePlayer2() {
 
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2");
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
-    const WinAmountRef = ref(DB, "/Public/" + userId);
-    console.log(WinAmountRef);
-
-    get(WinAmountRef).then((snapshot) => {
-
-        gtnWins = snapshot.val();
-        console.log(gtnWins);
-
-    }).catch((error) => {
-
-        //❌ Code for a read error goes here
-        console.log("failed to add a win");
-
-    });
+    const gtnWins = ref(DB, "Public/" + userId);
 
     update(dbReference, { CurrentGuess: player2Guess.value}).then(() => {
   
@@ -982,9 +960,24 @@ function fb_WritePlayer2() {
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
-            gtnWins++
             update(WinReference, {playerHasWon: true}).then(() => {
             })
+            get(gtnWins).then((snapshot) => {
+                const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
+                console.log(fb_data);
+                var gtnNewWin = fb_data;
+                gtnNewWin["GTNWins"]++
+                console.log( "Public/" + userId + "/GTNWins" ,gtnNewWin)
+                console.log(gtnNewWin);
+                set(gtnWins ,gtnNewWin).then(() => {
+            
+            })
+            }).catch((error) => {
+                console.log(error);
+                //❌ Code for a read error goes here
+                console.log("failed to add a win");
+
+            });
             
         }
         
