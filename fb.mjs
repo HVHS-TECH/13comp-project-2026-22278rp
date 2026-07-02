@@ -621,41 +621,23 @@ function fb_displayGTNScores() {
     var sortKey = "GTNWins";
     const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(5));
     const userNameRef = ref(DB, "Games/GTN/hostedGames/" + HostID);
-    get(dbReference).then((Snapshot) => {
-        console.log(sortKey)
-        var GTNrank = 1;
-        const users = [];
-    });
     get(dbReference).then((allScoreDataSnapshot) => {
-        allScoreDataSnapshot.forEach(function (userScoreSnapshot) {
-            var obj = userScoreSnapshot.val();
-            var rank = 1;
-            const users = [];
-            gtnLeaderboard += "<tr><td>" + rank + "</td><td>" + obj.UserName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";
-            users.reverse();
+        var GTNrank = 1;
+        
+        allScoreDataSnapshot.forEach(function (userScoreSnapshot) { 
+            const obj = [userScoreSnapshot.val()];
+            //const users = [obj];
+           
             console.log(obj);
+            obj.forEach(() => {
+                obj.reverse();
+                gtnLeaderboard.innerHTML += "<tr><td>" + GTNrank + "</td><td>" + obj.userName + "</td><td>" + obj.GTNWins + "</td></tr>";
+                GTNrank++; 
+                console.log(obj);
+            });
+            
         });
     });
-    /*const table = document.getElementById("highScoreTableCoin");
-    table.innerHTML = "";//added by chatgpt
-
-    get(dbReference).then((snapshot) => {
-        var rank = 1;
-        const users = [];
-        snapshot.forEach((userSnap) => { //added by ChatGpt
-            users.push(userSnap.val());//added by ChatGpt
-        });
-        users.reverse();
-        users.forEach((obj) => {
-            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
-            rank++;//chatgpt added this
-        });
-    }).catch((error) => {
-        //❌ Code for a sorted read error goes here
-        console.log("Sorting failed", error);
-    });
-}*/
-
 }
 
 function fb_playerFoundListener() {

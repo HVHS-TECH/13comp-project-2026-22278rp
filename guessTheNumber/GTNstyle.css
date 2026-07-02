@@ -54,3 +54,8 @@ text-align:center;
   background-color:#252422; /* Green */
   color: white;
 }
+
+table, th, td {
+  border:1px solid black;
+  width:100%
+}
