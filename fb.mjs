@@ -458,7 +458,7 @@ function fb_ReadSortedLibrary() {
     const DB = getDatabase();
     const sortKey = "userHighScoreLibrary";
     const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey));
-    const table = document.getElementById("highScoreTableLibrary");
+    const table = document.getElementById("LLALeaderboard");
     table.innerHTML = ""; //added by chatgpt
 
     get(dbReference).then((snapshot) => {
@@ -485,7 +485,7 @@ function fb_ReadSortedCoin() {
     const DB = getDatabase();
     const sortKey = "userHighScoreCoin";
     const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey));//chatgpt removed limit to first
-    const table = document.getElementById("highScoreTableCoin");
+    const table = document.getElementById("CCLeaderboard");
     table.innerHTML = "";//added by chatgpt
 
     get(dbReference).then((snapshot) => {
@@ -619,24 +619,34 @@ function fb_displayGTNScores() {
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
     var sortKey = "GTNWins";
+    var obj;
+    const leaderboard = document.getElementById("gtnLeaderboard");
     const dbReference = query(ref(DB, "Public/"), orderByChild(sortKey), limitToFirst(5));
     const userNameRef = ref(DB, "Games/GTN/hostedGames/" + HostID);
     get(dbReference).then((allScoreDataSnapshot) => {
         var GTNrank = 1;
+        const users = [];
+        leaderboard.innerHTML += "<tr><td>Rank</td><td>Name</td><td>Wins</td></tr>";
         
         allScoreDataSnapshot.forEach(function (userScoreSnapshot) { 
-            const obj = [userScoreSnapshot.val()];
-            //const users = [obj];
-           
-            console.log(obj);
-            obj.forEach(() => {
-                obj.reverse();
-                gtnLeaderboard.innerHTML += "<tr><td>" + GTNrank + "</td><td>" + obj.userName + "</td><td>" + obj.GTNWins + "</td></tr>";
-                GTNrank++; 
-                console.log(obj);
-            });
+            obj = userScoreSnapshot.val();
             
+            users.push(userScoreSnapshot.val());
+            //gtnLeaderboard.innerHTML += "<tr><td>" + GTNrank + "</td><td>" + obj.userName + "</td><td>" + obj.GTNWins + "</td></tr>";
+            //GTNrank++; 
+            console.log(users); 
         });
+        users.reverse();
+        users.forEach((obj) => {
+            leaderboard.innerHTML += "<tr><td>" + GTNrank + "</td><td>" + obj.userName + "</td><td>" + obj.GTNWins + "</td></tr>";
+            GTNrank++; 
+        });
+          
+    }).catch((error) => {
+
+        //❌ Code for a write error goes here
+        console.log(error)
+        console.log("sorting error")
     });
 }
 

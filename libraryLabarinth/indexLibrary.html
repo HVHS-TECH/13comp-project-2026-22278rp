@@ -22,13 +22,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.8.0/addons/p5.sound.js" integrity="sha512-TU9AWtV5uUZPX8dbBAH8NQF1tSdigPRRT82vllAQ1Ke28puiqLA6ZVKxtUGlgrH6yWFnkKy+sE6luNEGH9ar0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://p5play.org/v3/planck.min.js"></script>
   <script src="https://p5play.org/v3/p5play.js"></script>
+
+  <script type="module" src="./main.mjs"></script>
   
 </head>
 
 <!--***************************************************
   BODY
 ****************************************************-->
-<body>
+<body onload="fb_initialise(); fb_detectLoginChange(); fb_ReadSortedLibrary()" >
  
 
   <header>
@@ -38,6 +40,8 @@
         <div class="column">
             <button onclick="location.href='Game.html'" class = "pixelify-sans-bold">Play</button>
             <button onclick="location.href='instruction.html'" class = "pixelify-sans-bold">Controls</button>
+            <h1>Leaderboard:</h1>
+            <table id = LLALeaderboard></table>
         </div>
     </div>
   </header>
