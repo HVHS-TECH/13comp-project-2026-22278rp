@@ -2,31 +2,29 @@
 <html>
 
 <head>
-    <title>Registration</title>
+  <title>Registration</title>
 
-    <!-- firebase start ****************************************-->
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-    <!-- firebase end ******************************************-->
+  <!-- firebase start ****************************************-->
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+  <!-- firebase end ******************************************-->
 
-    <!-- Your JS files & main module ***************************-->
-    <script type="module" src="./fb.mjs"></script>
-    <script type="module" src="registration.mjs"></script>
+  <!-- Your JS files & main module ***************************-->
+  <script type="module" src="./fb.mjs"></script>
+  <script type="module" src="registration.mjs"></script>
 
-    <!--CSS files-->
-    <link rel="stylesheet" type="text/css" href="./style.css">
+  <!--CSS files-->
+  <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 
 
 <body onload="fb_initialise(); fb_authenticate()">
 
-<div class="grid-container">
+  <div class="grid-container">
     <div class="grid-item item1">
       <nav>
-        <button class = "navButtons" onclick="location.href='index.html'">Home</button>
+        <button class="navButtons" onclick="location.href='index.html'">Home</button>
         <br>
-        <button class = "navButtons" onclick="fb_DeleteRec()">delete data</button>
-        <br>
-        <button class = "navButtons" onclick="fb_DeleteRec()">Feedback</button>
+        <button class="navButtons" onclick="fb_DeleteRec()">delete data</button>
       </nav>
     </div>
     <div class="grid-item item2">
@@ -36,26 +34,26 @@
     </div>
     <div class="grid-item item3">
       <main>
-       <form id="userInfoForm">
-            <label for="name">Username:</label>
-            <input type="text" id="name" name="name" required />
-            <label for="name">Age:</label>
-            <input type="number" id="age" age="age" required min="0" max="120" />
-            <div>
-              <select id="gender" gender="gender" required>
-                <option value="f">Female</option>
-                <option value="m">Male</option>
-                <option value="nb">Non-Binary</option>
-                <option value="o">Other</option>
-                <option value="?">Prefer not to say</option>
-              </select>
-              <label for="birthday">Birthday:</label>
-              <input type="date" id="birthday" name="birthday">
-            </div>
+        <form id="userInfoForm">
+          <label for="name">Username:</label>
+          <input type="text" id="name" name="name" required />
+          <label for="name">Age:</label>
+          <input type="number" id="age" age="age" required min="4" max="120" />
+          <div>
+            <select id="gender" gender="gender" required>
+              <option value="f">Female</option>
+              <option value="m">Male</option>
+              <option value="nb">Non-Binary</option>
+              <option value="o">Other</option>
+              <option value="?">Prefer not to say</option>
+            </select>
+            <label for="birthday">Birthday:</label>
+            <input type="date" id="birthday" name="birthday">
+          </div>
         </form>
 
         <!--<form name="form1" id="form1" action="/action_page.php">-->
-          
+
         <button onclick="fb_WriteRec()">Register</button>
       </main>
     </div>
@@ -64,7 +62,7 @@
 
       </footer>
     </div>
-</div>
+  </div>
 </body>
 
 </html>

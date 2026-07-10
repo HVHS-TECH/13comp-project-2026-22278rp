@@ -1,19 +1,22 @@
 /*******************************************
 fb.mjs
 Written by Ryan Parks, Term 1 and 2 2026
+Used W3Schools tutorials during the development process:  https://www.w3schools.com/about/about_copyright.asp 
+Caleb Lowe helped me with some of the firebase rules and functions
 All variables & functions begin with fb_
+camelCase is used for variables and CaptialCaptial is used for firebase strings
 *******************************************/
 
 //Variables
 const COL_C = 'white';	    // These two const are part of the coloured 	
 const COL_B = '#4a048b';	//  console.log for functions scheme
-var currentUser = null;
-var userId = null;
-var targetNumber = null;
-var fb_PicData = null;
-var fb_TargetData = null;
-var ButtonGameId;
-var gameId = null;
+var currentUser = null; //the users that is using the function
+var userId = null; //The Id of the users using the website
+var targetNumber = null; //Th answer in Guess the Number changes when a game is started
+var fb_PicData = null; //profile picture data
+var fb_TargetData = null; //data for the target number
+var ButtonGameId; //Holding the data of the gameid for player 2
+var gameId = null; //Id of a GTN game that is being hosted
 
 //Imported functions and constants required
 import { initializeApp }
@@ -29,49 +32,50 @@ import { writeBatch, doc }
 //Exported functions
 export {
     //setting up the firebase
-     fb_initialise, 
-     fb_fillDatabase,
-     //Login functions
-     fb_authenticate, 
-     fb_logout,
-     fb_detectLoginChange, 
-     fb_detectLoginChangeStayPut, 
-     fb_detectLoginChangeGame, 
-     fb_detectLoginChangeOnLoading,
-     //Write Rec
-     fb_WriteRec, 
-     fb_WriteRecPrivate, 
-     fb_DeleteRec, 
-     fb_writeScoreLibrary, 
-     fb_writeScoreCoin, 
-     //Read Rec
-     fb_ReadRec, 
-     fb_ReadSortedCoin, 
-     fb_ReadSortedLibrary,
-     fb_getUsername,
-     //Guess the Number 
-     fb_readListener, 
-     fb_logDatabaseRead, 
-     fb_sendAvailableGame, 
-     fb_joinedGame, 
-     fb_stopGame,
-     fb_playerFoundListener,
-     fb_RandomNumberRec,
-     fb_GetTargetNumber,
-     fb_StartGame,
-     fb_WritePlayer1,
-     fb_WritePlayer2,
-     fb_ListenForPlayer1,
-     fb_ListenForPlayer2,
-     fb_WinnerListener,
-     fb_DetectPlayers,
-     //Score systems
-     fb_AddAWin,
-     fb_displayGTNScores,
-     fb_error 
-    }
+    fb_initialise,
+    fb_fillDatabase,
+    //Login functions
+    fb_authenticate,
+    fb_logout,
+    fb_detectLoginChange,
+    fb_detectLoginChangeStayPut,
+    fb_detectLoginChangeGame,
+    fb_detectLoginChangeOnLoading,
+    //Write Rec
+    fb_WriteRec,
+    fb_WriteRecPrivate,
+    fb_DeleteRec,
+    fb_writeScoreLibrary,
+    fb_writeScoreCoin,
+    //Read Rec
+    fb_ReadRec,
+    fb_ReadSortedCoin,
+    fb_ReadSortedLibrary,
+    fb_getUsername,
+    //Guess the Number 
+    fb_readListener,
+    fb_logDatabaseRead,
+    fb_sendAvailableGame,
+    fb_joinedGame,
+    fb_stopGame,
+    fb_playerFoundListener,
+    fb_RandomNumberRec,
+    fb_GetTargetNumber,
+    fb_StartGame,
+    fb_WritePlayer1,
+    fb_WritePlayer2,
+    fb_ListenForPlayer1,
+    fb_ListenForPlayer2,
+    fb_WinnerListener,
+    fb_DetectPlayers,
+    //Score systems
+    fb_AddAWin,
+    fb_displayGTNScores,
+    fb_error
+}
 //Firebase Functions
 
+//Initializes the firebase in every page, so all the other functions can access it
 function fb_initialise() {
     console.log('%c fb_initialise(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const firebaseConfig =
@@ -85,13 +89,13 @@ function fb_initialise() {
         appId: "1:1051076918197:web:261d4bdb89ecb5dfacf7fc",
         measurementId: "G-B0QCFTLPYQ"
     };
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const firebaseGameDB = getDatabase(app);
     console.info(firebaseGameDB);
     // Initialize Firebase only if it hasn’t already been initialized
 }
 
+//Autheticates the user's google account and adds that data to the firebase
 function fb_authenticate() {
     console.log('%c fb_authenticate(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
@@ -116,19 +120,22 @@ function fb_authenticate() {
         });
 }
 
+//Detect the status of if the user had an account
 function fb_detectLoginChange() {
     console.log('%c fb_detectLoginChange(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
 
     onAuthStateChanged(AUTH, (user) => {
         if (user) {
+            //User is logged in
             currentUser = user;
             console.log(currentUser);
             userId = user.uid;
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
             userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
         } else {
-            console.log("⚠️ Not logged in — redirecting to registration.html");
+            //if they haven't registed using their google account
+            console.log("⚠️ Haven't signed up — redirecting to registration.html");
             location.href = "registration.html";
         }
     }, (error) => {
@@ -136,26 +143,30 @@ function fb_detectLoginChange() {
     });
 }
 
+//Same as detect login change, but is used for the index page to detect if the users has logged in before and sending them to gameLibrary.html
 function fb_detectLoginChangeStayPut() {
     console.log('%c fb_detectLoginChange(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
 
     onAuthStateChanged(AUTH, (user) => {
         if (user) {
+            //User is logged in
             currentUser = user;
             userId = user.uid;
             console.log("✅ Logged in as:", user.email, user.displayName, user.photoURL);
             loggedIn.innerHTML = "Logged in";
             location.href = "gameLibrary.html";
-            namedIndex.innerHTML = "Play my games " + name + "!!!!!";
             userPhoto.innerHTML = "<img src =" + user.photoURL + "> </img>"
         } else {
+            //if they haven't registed using their google account
             console.log("⚠️ Not logged in");
         }
     }, (error) => {
         console.error("❌ Auth detection error:", error);
     });
 }
+
+//Same as detect login change for the GTN game actvates fb_getUsername
 function fb_detectLoginChangeGame() {
     console.log('%c fb_detectLoginChangeGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
@@ -176,6 +187,8 @@ function fb_detectLoginChangeGame() {
         console.error("❌ Auth detection error:", error);
     });
 }
+
+//detect login change for GTN loading screen creates the answer and activates a listener waiting for the game to fill
 function fb_detectLoginChangeOnLoading() {
     console.log('%c fb_detectLoginChange(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
@@ -199,7 +212,7 @@ function fb_detectLoginChangeOnLoading() {
     });
 }
 
-
+//Gathers the user's info from the firebase such as profile pic and username for different pages 
 function fb_getUsername(ButtonGameId) {
     const DB = getDatabase();
     let HostID = sessionStorage.getItem("hostId");
@@ -223,7 +236,7 @@ function fb_getUsername(ButtonGameId) {
         }
 
         if (document.getElementById("loadingIdentifier") != null) {
-             update(player1Ref, { userName: fb_data, profilepicture: fb_PicData }).then(() => {
+            update(player1Ref, { userName: fb_data, profilepicture: fb_PicData }).then(() => {
 
                 //✅ Code for a successful write goes here
                 console.log("successful loading username")
@@ -236,8 +249,8 @@ function fb_getUsername(ButtonGameId) {
             });
         }
 
-         if (document.getElementById("lobbyIdentifier") != null) {
-             update(player2Ref, { userName: fb_data, profilepicture: fb_PicData }).then(() => {
+        if (document.getElementById("lobbyIdentifier") != null) {
+            update(player2Ref, { userName: fb_data, profilepicture: fb_PicData }).then(() => {
 
                 //✅ Code for a successful write goes here
                 console.log("successful lobbying")
@@ -250,11 +263,11 @@ function fb_getUsername(ButtonGameId) {
             });
         }
 
-       
+
     });
 }
 
-
+//logs the users out
 function fb_logout() {
     console.log('%c fb_logout(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const AUTH = getAuth();
@@ -273,6 +286,7 @@ function fb_logout() {
         });
 }
 
+//Writes the users public information to the database (Username)
 function fb_WriteRec() {
     const AUTH = getAuth();
     var name = document.getElementById("name").value;
@@ -288,7 +302,7 @@ function fb_WriteRec() {
     const dbReference = ref(DB, "Public/" + userId);
     const gtnWins = ref(DB, "Public/" + userId + "/GTNWins")
 
-    update(dbReference, { userName: name}).then(() => {
+    update(dbReference, { userName: name }).then(() => {
         set(gtnWins, 0)
         //✅ Code for a successful write goes here
         console.log("successful write")
@@ -301,12 +315,13 @@ function fb_WriteRec() {
     });
 }
 
+//Writes the users private information to the database (age, gender, birthday)
 function fb_WriteRecPrivate() {
     const AUTH = getAuth();
     var age = document.getElementById("age").value;
     var gender = document.getElementById("gender").value;
     var birthday = document.getElementById("birthday").value;
-    if (!currentUser || age == "" || isNaN(age) || gender == "" || !isNaN(gender) || birthday == "" || !isNaN(birthday)) {
+    if (!currentUser || age == "" || isNaN(age) || age == null || gender == "" || gender == null || birthday == "" || birthday == null) {
         alert("You must be logged in and enter a valid name and age.")
         return;
     }
@@ -328,7 +343,7 @@ function fb_WriteRecPrivate() {
         console.log("Writing error")
     });
 
-    //Collects data of the user's google account
+    //Collects data of the user's google account data collected in authetication
 
     onAuthStateChanged(AUTH, (user) => {
         if (user) {
@@ -354,8 +369,7 @@ function fb_WriteRecPrivate() {
         });
 }
 
-//Writing the score for the game: Coin Collector to the database
-
+//Deletes the users private data from the firebase
 function fb_DeleteRec() {
     console.log('%c fb_DeleteRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
@@ -375,6 +389,7 @@ function fb_DeleteRec() {
     });
 
 }
+
 
 function fb_ReadRec() {
     console.log('%c fb_ReadRec(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
@@ -469,7 +484,7 @@ function fb_ReadSortedLibrary() {
         });
         users.reverse();
         users.forEach((obj) => {
-            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreLibrary + "</td></tr>";//updated by chatgpt
+            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.userName + "</td><td>" + obj.userHighScoreLibrary + "</td></tr>";//updated by chatgpt
             rank++;//added by chatgpt
         });
     }).catch((error) => {
@@ -496,7 +511,7 @@ function fb_ReadSortedCoin() {
         });
         users.reverse();
         users.forEach((obj) => {
-            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.displayName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
+            table.innerHTML += "<tr><td>" + rank + "</td><td>" + obj.userName + "</td><td>" + obj.userHighScoreCoin + "</td></tr>";//chatgpt updated this
             rank++;//chatgpt added this
         });
     }).catch((error) => {
@@ -549,7 +564,7 @@ function fb_logDatabaseRead(snapshot) {
 function fb_sendAvailableGame() {
     console.log('%c fb_sendAvaliableGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
-    gameId =  Math.ceil(Math.random()*1000000)
+    gameId = Math.ceil(Math.random() * 1000000)
     sessionStorage.setItem("hostId", gameId);
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
 
@@ -569,7 +584,7 @@ function fb_sendAvailableGame() {
 }
 
 function fb_joinedGame(ButtonGameId) {
-    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';' );
+    console.log('%c fb_joinedGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     gameId = ButtonGameId
     const dbReference = ref(DB, "Games/GTN/hostedGames/" + gameId);
@@ -577,12 +592,12 @@ function fb_joinedGame(ButtonGameId) {
     update(dbReference, { isFilled: true }).then(() => {
 
         //✅ Code for a successful write goes here
-        console.log (player2Ref);
+        console.log(player2Ref);
         console.log(userId)
-        update(player2Ref, {UserId: userId}).then(() => {
-        sessionStorage.setItem("hostId", gameId);
-        console.log ("user recorded");
-        fb_getUsername(ButtonGameId);
+        update(player2Ref, { UserId: userId }).then(() => {
+            sessionStorage.setItem("hostId", gameId);
+            console.log("user recorded");
+            fb_getUsername(ButtonGameId);
         })
 
     }).catch((error) => {
@@ -627,21 +642,19 @@ function fb_displayGTNScores() {
         var GTNrank = 1;
         const users = [];
         leaderboard.innerHTML += "<tr><td>Rank</td><td>Name</td><td>Wins</td></tr>";
-        
-        allScoreDataSnapshot.forEach(function (userScoreSnapshot) { 
+
+        allScoreDataSnapshot.forEach(function (userScoreSnapshot) {
             obj = userScoreSnapshot.val();
-            
+
             users.push(userScoreSnapshot.val());
-            //gtnLeaderboard.innerHTML += "<tr><td>" + GTNrank + "</td><td>" + obj.userName + "</td><td>" + obj.GTNWins + "</td></tr>";
-            //GTNrank++; 
-            console.log(users); 
+            console.log(users);
         });
         users.reverse();
         users.forEach((obj) => {
             leaderboard.innerHTML += "<tr><td>" + GTNrank + "</td><td>" + obj.userName + "</td><td>" + obj.GTNWins + "</td></tr>";
-            GTNrank++; 
+            GTNrank++;
         });
-          
+
     }).catch((error) => {
 
         //❌ Code for a write error goes here
@@ -661,16 +674,16 @@ function fb_playerFoundListener() {
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
-        console.log (fb_data);
+        console.log(fb_data);
         console.log(fb_data["isFilled"])
-        if(fb_data["isFilled"] == true) {
+        if (fb_data["isFilled"] == true) {
             //✅ Code if another player had joined the host's game
             console.log("GAME HAS LOADED");
-            update(player1Ref, {UserId: userId}).then(() => {
-            fb_getUsername();
+            update(player1Ref, { UserId: userId }).then(() => {
+                fb_getUsername();
             })
-         
-            
+
+
         }
         else {
             //✅ No one has joined the host's game yet
@@ -752,7 +765,7 @@ function fb_fillDatabase() {
 
 function fb_RandomNumberRec() {
     const AUTH = getAuth();
-    var targetNumber =  Math.ceil(Math.random()*100)
+    var targetNumber = Math.ceil(Math.random() * 100)
     console.log('%c fb_RandomNumberRec(): ',
         'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
@@ -766,7 +779,7 @@ function fb_RandomNumberRec() {
         //✅ Code for a successful write goes here
         console.log("Random number created")
         console.log(targetNumber);
-        
+
 
     }).catch((error) => {
 
@@ -777,7 +790,7 @@ function fb_RandomNumberRec() {
 
 function fb_GetTargetNumber() {
     const AUTH = getAuth();
-    console.log('%c fb_GetTargetNumber(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    console.log('%c fb_GetTargetNumber(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
     console.log(HostID);
@@ -811,40 +824,40 @@ function fb_GetTargetNumber() {
 
 function fb_StartGame() {
     const AUTH = getAuth();
-    console.log('%c fb_StartGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    console.log('%c fb_StartGame(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
     console.log(HostID);
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID)
-    update(player1Ref, {TheirTurn: true}).then(() => {
-        
+    update(player1Ref, { TheirTurn: true }).then(() => {
+
     })
-    update(player2Ref, {TheirTurn: false}).then(() => {
-        
+    update(player2Ref, { TheirTurn: false }).then(() => {
+
     })
 
-    update(dbReference, {playerHasWon: false}).then(() => {
+    update(dbReference, { playerHasWon: false }).then(() => {
         fb_WinnerListener();
     })
 }
 
 function fb_AddAWin() {
     const AUTH = getAuth();
-    console.log('%c fb_AddAWin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    console.log('%c fb_AddAWin(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     const gtnWins = ref(DB, "Public/" + userId);
-    
+
     get(gtnWins).then((snapshot) => {
         const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
         console.log(fb_data);
         var gtnNewWin = fb_data;
         gtnNewWin["GTNWins"]++
-        console.log( "Public/" + userId + "/GTNWins" ,gtnNewWin)
+        console.log("Public/" + userId + "/GTNWins", gtnNewWin)
         console.log(gtnNewWin);
-        set(gtnWins ,gtnNewWin).then(() => {
-            
+        set(gtnWins, gtnNewWin).then(() => {
+
         })
     }).catch((error) => {
         console.log(error);
@@ -852,12 +865,12 @@ function fb_AddAWin() {
         console.log("failed to add a win");
 
     });
-    
+
 }
 
 function fb_WritePlayer1() {
     const AUTH = getAuth();
-    console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    console.log('%c fb_WritePlayer1(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
     let Answer = sessionStorage.getItem("Answer");
@@ -866,30 +879,33 @@ function fb_WritePlayer1() {
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1");
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
     const gtnWins = ref(DB, "Public/" + userId);
-    
-    update(dbReference, { CurrentGuess: player1Guess.value}).then(() => {
-  
+
+    update(dbReference, { CurrentGuess: player1Guess.value }).then(() => {
+
         //✅ Code for a successful write goes here
         console.log("Player 1 has guessed!")
         console.log(player1Guess.value);
-        if (player1Guess.value == Answer) 
-        {
+        if (!currentUser || player1Guess.value == "" || isNaN(player1Guess.value) || player1Guess.value == null) {
+        alert("Incorrect you must enter a valid number between 1 and 100")
+        return;
+        }
+        if (player1Guess.value == Answer) {
             console.log("You won");
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
-            update(WinReference, {playerHasWon: true}).then(() => {
+            update(WinReference, { playerHasWon: true }).then(() => {
             })
             get(gtnWins).then((snapshot) => {
                 const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
                 console.log(fb_data);
                 var gtnNewWin = fb_data;
                 gtnNewWin["GTNWins"]++
-                console.log( "Public/" + userId + "/GTNWins" ,gtnNewWin)
+                console.log("Public/" + userId + "/GTNWins", gtnNewWin)
                 console.log(gtnNewWin);
-                set(gtnWins,gtnNewWin).then(() => {
-            
-            })
+                set(gtnWins, gtnNewWin).then(() => {
+
+                })
             }).catch((error) => {
                 console.log(error);
                 //❌ Code for a read error goes here
@@ -897,24 +913,22 @@ function fb_WritePlayer1() {
 
             });
         }
-        
-        else if (player1Guess.value < Answer )
-        {
+
+        else if (player1Guess.value < Answer) {
             //If the user inputs a number over the target number
             console.log("Lower")
             currentGuess.innerHTML = "Current Guess: " + player1Guess.value;
             isItClose.innerHTML = "Lower than the Number";
-            update(dbReference, {TheirTurn: false}).then(() => {
+            update(dbReference, { TheirTurn: false }).then(() => {
             })
         }
-        
-        else if (player1Guess.value > Answer) 
-        {
+
+        else if (player1Guess.value > Answer) {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
             currentGuess.innerHTML = "Current Guess: " + player1Guess.value;
             isItClose.innerHTML = "Higher than the Number";
-            update(dbReference, {TheirTurn: false}).then(() => {
+            update(dbReference, { TheirTurn: false }).then(() => {
             })
         }
 
@@ -928,7 +942,7 @@ function fb_WritePlayer1() {
 
 function fb_WritePlayer2() {
     const AUTH = getAuth();
-    console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';'); 
+    console.log('%c fb_WritePlayer2(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase()
     let HostID = sessionStorage.getItem("hostId");
     let Answer = sessionStorage.getItem("Answer");
@@ -940,56 +954,57 @@ function fb_WritePlayer2() {
     const WinReference = ref(DB, "/Games/GTN/hostedGames/" + HostID);
     const gtnWins = ref(DB, "Public/" + userId);
 
-    update(dbReference, { CurrentGuess: player2Guess.value}).then(() => {
-  
+    update(dbReference, { CurrentGuess: player2Guess.value }).then(() => {
+
         //✅ Code for a successful write goes here
         console.log("Player 2 has guessed!")
         console.log(player2Guess.value);
-        
-        if (player2Guess.value == Answer) 
-        {
+        if (!currentUser || player2Guess.value == "" || isNaN(player2Guess.value) || player2Guess.value == null) {
+        alert("Incorrect you must enter a valid number between 1 and 100")
+        return;
+        }
+
+        if (player2Guess.value == Answer) {
             console.log("You won");
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "You Won!";
             alert("you won");
-            update(WinReference, {playerHasWon: true}).then(() => {
+            update(WinReference, { playerHasWon: true }).then(() => {
             })
             get(gtnWins).then((snapshot) => {
                 const fb_data = snapshot.val(); //TODO gtnWins is not a number, need to fix this
                 console.log(fb_data);
                 var gtnNewWin = fb_data;
                 gtnNewWin["GTNWins"]++
-                console.log( "Public/" + userId + "/GTNWins" ,gtnNewWin)
+                console.log("Public/" + userId + "/GTNWins", gtnNewWin)
                 console.log(gtnNewWin);
-                set(gtnWins ,gtnNewWin).then(() => {
-            
-            })
+                set(gtnWins, gtnNewWin).then(() => {
+
+                })
             }).catch((error) => {
                 console.log(error);
                 //❌ Code for a read error goes here
                 console.log("failed to add a win");
 
             });
-            
+
         }
-        
-        else if (player2Guess.value < Answer )
-        {
+
+        else if (player2Guess.value < Answer) {
             //If the user inputs a number over the target number
             console.log("Lower")
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "Lower than the Number";
-            update(dbReference, {TheirTurn: false}).then(() => {
+            update(dbReference, { TheirTurn: false }).then(() => {
             })
         }
-        
-        else if (player2Guess.value > Answer) 
-        {
+
+        else if (player2Guess.value > Answer) {
             //If the user gets the number incorrect and it needs to be higher
             console.log("Higher")
             currentGuess.innerHTML = "Current Guess: " + player2Guess.value;
             isItClose.innerHTML = "Higher than the Number";
-            update(dbReference, {TheirTurn: false}).then(() => {
+            update(dbReference, { TheirTurn: false }).then(() => {
             })
         }
 
@@ -1006,23 +1021,23 @@ function fb_ListenForPlayer1() {
     const DB = getDatabase();
     let HostID = sessionStorage.getItem("hostId");
     const player1Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player1")
-    console.log (player1Ref);
+    console.log(player1Ref);
     const player2Ref = ref(DB, "/Games/GTN/hostedGames/" + HostID + "/Player2")
-    console.log (player2Ref);
+    console.log(player2Ref);
     onValue(player1Ref, (snapshot) => {
         console.log("record changed");
         buttonP2.innerHTML = null
         var fb_data = snapshot.val();
-        console.log (fb_data);
+        console.log(fb_data);
         console.log(fb_data["TheirTurn"])
-        if(fb_data["TheirTurn"] == true) {
+        if (fb_data["TheirTurn"] == true) {
             //✅ Remove player 2's button
-         
+
         }
-        else if (fb_data["TheirTurn"] == false){
+        else if (fb_data["TheirTurn"] == false) {
             //Change to player 2's turn add their button
-            update(player2Ref, {TheirTurn: true}).then(() => {
-            buttonP2.innerHTML += "<button onclick=fb_WritePlayer2()>Submit</button>"
+            update(player2Ref, { TheirTurn: true }).then(() => {
+                buttonP2.innerHTML += "<button onclick=fb_WritePlayer2()>Submit</button>"
             })
 
         }
@@ -1042,16 +1057,16 @@ function fb_ListenForPlayer2() {
         console.log("record changed");
         buttonP1.innerHTML = null
         var fb_data = snapshot.val();
-        console.log (fb_data);
+        console.log(fb_data);
         console.log(fb_data["TheirTurn"])
-        if(fb_data["TheirTurn"] == true) {
+        if (fb_data["TheirTurn"] == true) {
             //✅ Remove player 1's button
-         
+
         }
-        else if (fb_data["TheirTurn"] == false){
+        else if (fb_data["TheirTurn"] == false) {
             //Change to player 1's turn add their button
-            update(player1Ref, {TheirTurn: true}).then(() => {
-            buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>Submit</button>"
+            update(player1Ref, { TheirTurn: true }).then(() => {
+                buttonP1.innerHTML += "<button onclick=fb_WritePlayer1()>Submit</button>"
             })
         }
     });
@@ -1066,23 +1081,23 @@ function fb_WinnerListener() {
     let HostID = sessionStorage.getItem("hostId");
     console.log(HostID);
     const dbReference = ref(DB, "/Games/GTN/hostedGames/" + HostID)
-    
+
     onValue(dbReference, (snapshot) => {
         console.log("record changed");
         var fb_data = snapshot.val();
-        console.log (fb_data);
-        if(fb_data["playerHasWon"] == true) {
+        console.log(fb_data);
+        if (fb_data["playerHasWon"] == true) {
             alert("A player has guessed the number!");
             fb_stopGame();
         }
-        else if (fb_data["playerHasWon"] == false){
+        else if (fb_data["playerHasWon"] == false) {
             console.log("No Winner")
         }
     });
 }
 
 function fb_DetectPlayers() {
-     //The host player, player 1 listens for player 2 to guess a number
+    //The host player, player 1 listens for player 2 to guess a number
     console.log('%c fb_DetectPlayers(): ', 'color: ' + COL_C + '; background-color: ' + COL_B + ';');
     const DB = getDatabase();
     let HostID = sessionStorage.getItem("hostId");
@@ -1094,10 +1109,10 @@ function fb_DetectPlayers() {
         var fb_data = snapshot.val();
         p1Photo.innerHTML = "<img src =" + fb_data["profilepicture"] + "> </img>"
         p1Name.innerHTML = "P1: " + fb_data["userName"];
-        console.log (fb_data);
+        console.log(fb_data);
 
         console.log(fb_data["UserId"])
-        if(fb_data["UserId"] == userId) {
+        if (fb_data["UserId"] == userId) {
             fb_ListenForPlayer2();
         }
         else {
@@ -1110,12 +1125,12 @@ function fb_DetectPlayers() {
         var fb_data = snapshot.val();
         p2Photo.innerHTML = "<img src =" + fb_data["profilepicture"] + "> </img>"
         p2Name.innerHTML = "P2: " + fb_data["userName"];
-        console.log (fb_data);
+        console.log(fb_data);
         console.log(fb_data["UserId"])
-        if(fb_data["UserId"] == userId) {
+        if (fb_data["UserId"] == userId) {
             fb_ListenForPlayer1();
-         
-            
+
+
         }
         else {
             //✅ No one has joined the host's game yet

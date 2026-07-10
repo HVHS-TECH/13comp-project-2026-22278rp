@@ -2,35 +2,29 @@
 <html>
 
 <head>
-    <title>Guess the Number - Lobby</title>
+  <title>Guess the Number - Lobby</title>
 
-    <!-- firebase start ****************************************-->
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-    <!-- firebase end ******************************************-->
+  <!-- firebase start ****************************************-->
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+  <!-- firebase end ******************************************-->
 
-    <!-- Your JS files & main module ***************************-->
-    <script type="module" src="lobby.mjs"></script>
+  <!-- Your JS files & main module ***************************-->
+  <script type="module" src="lobby.mjs"></script>
 
-    <!--CSS files-->
-    <link rel="stylesheet" type="text/css" href="GTNstyle.css">
+  <!--CSS files-->
+  <link rel="stylesheet" type="text/css" href="GTNstyle.css">
 </head>
 
 
 <body onload="fb_initialise(); fb_detectLoginChange(); fb_readListener(); fb_displayGTNScores()" id="lobbyIdentifier">
 
-<div class="grid-container">
+  <div class="grid-container">
     <div class="grid-item item1">
       <nav>
-        <div id = "userPhoto"></div>
-        <button class = "navButtons" onclick="location.href='/gameLibrary.html'">Game Library</button>
+        <div id="userPhoto"></div>
+        <button class="navButtons" onclick="location.href='/gameLibrary.html'">Game Library</button>
         <br>
-        <button class = "navButtons" onclick="fb_DeleteRec()">delete data</button>
-        <br>
-        <button class = "navButtons" onclick="fb_logout()">Logout</button>
-        <br>
-        <button class= "navButtons" onclick="fb_DeleteRec()">Feedback</button>
-        <br>
-        <button class = "navButtons" onclick="location.href='admin/admin.html'">admin</button>
+        <button class="navButtons" onclick="fb_DeleteRec()">delete data</button>
       </nav>
     </div>
     <div class="grid-item item2">
@@ -41,24 +35,23 @@
     <div class="grid-item item3">
       <main>
         <h1>Instructions:</h1>
-        <p>In Guess the Number, a random number is selected and you and another player have to take turns trying to guess it, until someone wins!</p>
+        <p>In Guess the Number, a random number is selected and you and another player have to take turns trying to
+          guess it, until someone wins!</p>
 
         <h1>Leaderboard:</h1>
-        <table id = gtnLeaderboard></table>
+        <table id=gtnLeaderboard></table>
       </main>
     </div>
     <div class="grid-item item4">
       <footer>
         <h2>Games:</h2>
         <button onclick="fb_sendAvailableGame()">Create game</button>
-        <button onclick="fb_readListener()">LISTEN PLEASE</button>
-        <button onclick="fb_AddAWin()">Add a free win here</button>
         <h3>Available games</h3>
         <div id="buttons"></div>
       </footer>
     </div>
 
-</div>
+  </div>
 </body>
 
 </html>

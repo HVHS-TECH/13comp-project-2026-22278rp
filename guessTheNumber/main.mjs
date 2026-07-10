@@ -12,19 +12,19 @@ console.log('%c main.mjs',
 // Import all external constants & functions required
 /**************************************************************/
 // Import all the constants & functions required from fb_io module
-import { fb_initialise, fb_authenticate, fb_detectLoginChange, fb_RandomNumberRec, fb_WritePlayer1, fb_WritePlayer2, fb_GetTargetNumber, fb_DetectPlayers, fb_StartGame, fb_WinnerListener}
+import { fb_initialise, fb_authenticate, fb_detectLoginChange, fb_RandomNumberRec, fb_WritePlayer1, fb_WritePlayer2, fb_GetTargetNumber, fb_DetectPlayers, fb_StartGame, fb_WinnerListener }
     from '../fb.mjs';
 
-    window.fb_initialise = fb_initialise;
-    window.fb_authenticate = fb_authenticate;
-    window.fb_detectLoginChange = fb_detectLoginChange;
-    window.fb_RandomNumberRec = fb_RandomNumberRec;
-    window.fb_WritePlayer1 = fb_WritePlayer1;
-    window.fb_WritePlayer2 = fb_WritePlayer2;
-    window.fb_GetTargetNumber = fb_GetTargetNumber;
-    window.fb_DetectPlayers = fb_DetectPlayers;
-    window.fb_StartGame = fb_StartGame;
-    window.fb_WinnerListener = fb_WinnerListener;
+window.fb_initialise = fb_initialise;
+window.fb_authenticate = fb_authenticate;
+window.fb_detectLoginChange = fb_detectLoginChange;
+window.fb_RandomNumberRec = fb_RandomNumberRec;
+window.fb_WritePlayer1 = fb_WritePlayer1;
+window.fb_WritePlayer2 = fb_WritePlayer2;
+window.fb_GetTargetNumber = fb_GetTargetNumber;
+window.fb_DetectPlayers = fb_DetectPlayers;
+window.fb_StartGame = fb_StartGame;
+window.fb_WinnerListener = fb_WinnerListener;
 
 
 /**************************************************************/

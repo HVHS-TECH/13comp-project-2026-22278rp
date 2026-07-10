@@ -1,42 +1,44 @@
 .grid-container {
-display: grid;
-background-color: #EDE7E3; 
-grid-template-areas:
+  display: grid;
+  background-color: #EDE7E3;
+  grid-template-areas:
     'links header header header header header'
     'links main main main main main'
     'links footer footer footer footer footer';
 }
 
 .grid-item {
-  background-color: #fffcf2; 
-  border-style:groove;
+  background-color: #fffcf2;
+  border-style: groove;
 }
 
 .item1 {
-  grid-area: links ;
-  background-color:#403d39; display:inline-block;
-  color:#ffffff; 
-  
+  grid-area: links;
+  background-color: #403d39;
+  display: inline-block;
+  color: #ffffff;
+
 }
 
 .item2 {
-grid-area: header ;
-background-color:#eb5e28;
-color:#1B1F3B; 
-text-align:center;
+  grid-area: header;
+  background-color: #eb5e28;
+  color: #1B1F3B;
+  text-align: center;
 }
 
 .item3 {
-  grid-area: main ;
-  text-align:center;
-  color:#000000; 
+  grid-area: main;
+  text-align: center;
+  color: #000000;
 }
+
 .item4 {
-  grid-area:footer;
-  
-  text-align:center;
-  background-color:#ccc5b9;
-  color:#000000; 
+  grid-area: footer;
+
+  text-align: center;
+  background-color: #ccc5b9;
+  color: #000000;
 }
 
 .navButtons {
@@ -48,14 +50,18 @@ text-align:center;
   border: 8px #252422;
   border-radius: 6px;
   cursor: pointer;
-  margin-left:10px;
+  margin-left: 10px;
 }
+
 .navButtons:hover {
-  background-color:#252422; /* Green */
+  background-color: #252422;
+  /* Green */
   color: white;
 }
 
-table, th, td {
-  border:1px solid black;
-  width:100%
+table,
+th,
+td {
+  border: 1px solid black;
+  width: 100%
 }
